@@ -8,13 +8,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import javiercastellanos.com.example.abc.ui.academic_data.AcademicDataScreen
+import javiercastellanos.com.example.abc.ui.personal_data.PersonalDataScreen
+import javiercastellanos.com.example.abc.ui.skills.SkillsScreen
 import javiercastellanos.com.example.abc.ui.theme.ABCTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            AcademicDataScreen()
+            SkillsScreen()
             /*ABCTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
@@ -25,21 +27,5 @@ class MainActivity : ComponentActivity() {
                 }
             }*/
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    ABCTheme {
-        Greeting("Android")
     }
 }

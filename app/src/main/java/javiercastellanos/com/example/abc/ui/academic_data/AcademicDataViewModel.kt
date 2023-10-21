@@ -6,45 +6,33 @@ import androidx.lifecycle.ViewModel
 import javiercastellanos.com.example.abc.ui.utils.ComboOption
 
 class AcademicDataViewModel : ViewModel() {
-    private val _fullName = MutableLiveData<String>()
-    val fullName: LiveData<String> = _fullName
-    private val _email = MutableLiveData<String>()
-    val email: LiveData<String> = _email
-    private val _edad = MutableLiveData<String>()
-    val edad: LiveData<String> = _edad
-    private val _phone = MutableLiveData<String>()
-    val phone: LiveData<String> = _phone
-    private val _paises = MutableLiveData<List<ComboOption>>()
-    val paises: LiveData<List<ComboOption>> = _paises
-    private val _languages = MutableLiveData<List<ComboOption>>()
-    val languages: LiveData<List<ComboOption>> = _languages
-    private val _softSkills = MutableLiveData<List<ComboOption>>()
-    val softSkills: LiveData<List<ComboOption>> = _softSkills
+    private val _instituteEducation = MutableLiveData<String>()
+    val instituteEducation: LiveData<String> = _instituteEducation
+    private val _carrer = MutableLiveData<String>()
+    val carrer: LiveData<String> = _carrer
+    private val _startYear = MutableLiveData<String>()
+    val startYear: LiveData<String> = _startYear
+    private val _finalYear = MutableLiveData<String>()
+    val finalYear: LiveData<String> = _finalYear
 
 
-    fun onEmailChanged(email: String) {
-        _email.value = email
+    fun onCarrerChanged(carrer: String) {
+        _carrer.value = carrer
     }
-    fun onEdadChanged(password: String) {
-        _edad.value = password
+    fun onStartYearChanged(startYear: String) {
+        _startYear.value = startYear
     }
     fun onLoginClicked() {
         TODO("Not yet implemented")
     }
-    fun onFullNameChanged(fullName: String) {
-        _fullName.value = fullName
+    fun onInstituteEducationChanged(instituteEducation: String) {
+        _instituteEducation.value = instituteEducation
     }
-    fun onPhoneChanged(phone: String) {
-        _phone.value = phone
-    }
-    fun onPaisesChanged(paises: List<ComboOption>) {
-        _paises.value = paises
-    }
-    fun onLanguagesChanged(languages: List<ComboOption>) {
-        _languages.value = languages
-    }
-    fun onSoftSkillsChanged(softSkills: List<ComboOption>) {
-        _softSkills.value = softSkills
+    fun onFinalYearChanged(finalYear: String) {
+        _finalYear.value = finalYear
     }
 
+    fun onProgress(checked: Boolean) {
+        TODO("Not yet implemented")
+    }
 }

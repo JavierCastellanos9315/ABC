@@ -50,8 +50,12 @@ fun MultiComboBox(
     var selectedOptionsList  = remember { mutableStateListOf<Int>() }
 
     //Initial setup of selected ids
-    selectedIds.forEach{
-        selectedOptionsList.add(it)
+    if (selectedIds.isNotEmpty()){
+
+        selectedOptionsList.clear()
+        selectedIds.forEach{
+            selectedOptionsList.add(it)
+        }
     }
 
     ExposedDropdownMenuBox(
@@ -73,7 +77,9 @@ fun MultiComboBox(
         }
         TextField(
             enabled = isEnabled(),
-            modifier = Modifier.menuAnchor().fillMaxWidth(),
+            modifier = Modifier
+                .menuAnchor()
+                .fillMaxWidth(),
             readOnly = true,
             value = selectedSummary,
             onValueChange = {},
@@ -108,7 +114,9 @@ fun MultiComboBox(
                 DropdownMenuItem(
                     text = {
                         Row(verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.background(Color.White).fillMaxSize()) {
+                            modifier = Modifier
+                                .background(Color.White)
+                                .fillMaxSize()) {
                             Checkbox(
                                 checked = checked,
                                 onCheckedChange = { newCheckedState ->
@@ -173,7 +181,9 @@ fun SingleComboBox(
         }
         TextField(
             enabled = isEnabled(),
-            modifier = Modifier.menuAnchor().fillMaxWidth(),
+            modifier = Modifier
+                .menuAnchor()
+                .fillMaxWidth(),
             colors = TextFieldDefaults.textFieldColors(
                 containerColor = Color.White,
                 textColor = Color(0XFF0DA89B),
@@ -211,11 +221,21 @@ fun SingleComboBox(
                             Checkbox(
                                 checked = checked,
                                 onCheckedChange = { newCheckedState ->
-                                    if (newCheckedState) {
-
-                                        selectedOptionsList.add(option.id)
-                                    } else {
-                                        selectedOptionsList.remove(option.id)
+                                    if(selectedOptionsList.size == 0){
+                                        if (newCheckedState) {
+                                            selectedOptionsList.add(option.id)
+                                        } else {
+                                            selectedOptionsList.remove(option.id)
+                                        }
+                                    } else
+                                    {
+                                        if (newCheckedState) {
+                                            selectedOptionsList.remove(selectedOptionsList.first())
+                                            selectedOptionsList.add(option.id)
+                                        }
+                                        else {
+                                            selectedOptionsList.remove(option.id)
+                                        }
                                     }
                                 },
                             )
