@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import javiercastellanos.com.example.abc.R
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import javiercastellanos.com.example.abc.ui.main_menu.MainScreen
 import javiercastellanos.com.example.abc.ui.utils.TextFieldABC
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -38,74 +39,80 @@ fun LoginScreen() {
     val labelPassword = "Password"
     val email: String by viewModel.email.observeAsState(initial = "")
     val password: String by viewModel.password.observeAsState(initial = "")
+    val isLogged: Boolean by viewModel.isLogged.observeAsState(initial = false)
     val keyboardController = LocalSoftwareKeyboardController.current
-    Box(modifier = Modifier.fillMaxSize()) {
-        Image(
-            painter = painterResource(id = R.drawable.background_login),
-            contentDescription = "Background welcome",
-            contentScale = ContentScale.FillBounds,
-            modifier = Modifier.matchParentSize()
-        )
-    }
-    Box(modifier = Modifier.fillMaxSize()) {
+    if (isLogged){
+        MainScreen()
+    }else {
+        Box(modifier = Modifier.fillMaxSize()) {
+            Image(
+                painter = painterResource(id = R.drawable.background_login),
+                contentDescription = "Background welcome",
+                contentScale = ContentScale.FillBounds,
+                modifier = Modifier.matchParentSize()
+            )
+        }
+        Box(modifier = Modifier.fillMaxSize()) {
 
-        LazyColumn(
-            modifier = Modifier
-                .matchParentSize()
-                .padding(top = 40.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            item {
+            LazyColumn(
+                modifier = Modifier
+                    .matchParentSize()
+                    .padding(top = 40.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                item {
 
-                Image(
-                    painter = painterResource(id = R.drawable.logo2),
-                    contentDescription = "Logo",
-                    contentScale = ContentScale.FillBounds,
-                    modifier = Modifier
-                        .size(200.dp)
-                )
-            }
-            item {
-
-                Text(
-                    text = "Registrarme",
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(top = 60.dp, bottom = 100.dp),
-                    style = TextStyle(
-                        fontFamily = MaterialTheme.typography.bodyLarge.fontFamily,
-                        fontSize = 30.sp
+                    Image(
+                        painter = painterResource(id = R.drawable.logo2),
+                        contentDescription = "Logo",
+                        contentScale = ContentScale.FillBounds,
+                        modifier = Modifier
+                            .size(200.dp)
                     )
-                )
-            }
-            item {
-                TextFieldABC(
-                    textField = email,
-                    labelEmail,
-                    keyboardController = keyboardController,
-                    onTextFieldChanged = { viewModel.onEmailChanged(it) })
-            }
-            item {
-                TextFieldABC(
-                    textField = password,
-                    labelPassword,
-                    keyboardController = keyboardController,
-                    onTextFieldChanged = { viewModel.onPasswordChanged(it) })
-            }
-            item {
-                Button(
-                    onClick = { /*TODO*/ },
+                }
+                item {
 
-                    modifier = Modifier
-                        .padding(16.dp, top = 70.dp)
-                        .background(Color(0XFF0DA89B)),
-                    colors = ButtonDefaults.buttonColors(
-                        Color(0XFF0DA89B)
-                    ),
-                ) {
-                    Text(text = "Login", color = Color.White)
+                    Text(
+                        text = "Registrarme",
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(top = 60.dp, bottom = 100.dp),
+                        style = TextStyle(
+                            fontFamily = MaterialTheme.typography.bodyLarge.fontFamily,
+                            fontSize = 30.sp
+                        )
+                    )
+                }
+                item {
+                    TextFieldABC(
+                        textField = email,
+                        labelEmail,
+                        keyboardController = keyboardController,
+                        onTextFieldChanged = { viewModel.onEmailChanged(it) })
+                }
+                item {
+                    TextFieldABC(
+                        textField = password,
+                        labelPassword,
+                        keyboardController = keyboardController,
+                        onTextFieldChanged = { viewModel.onPasswordChanged(it) })
+                }
+                item {
+                    Button(
+                        onClick = { viewModel.onLoginClicked() },
+
+                        modifier = Modifier
+                            .padding(16.dp, top = 70.dp)
+                            .background(Color(0XFF0DA89B)),
+                        colors = ButtonDefaults.buttonColors(
+                            Color(0XFF0DA89B)
+                        ),
+                    ) {
+                        Text(text = "Login", color = Color.White)
+                    }
                 }
             }
         }
     }
+
 }
 
