@@ -25,70 +25,67 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 import javiercastellanos.com.example.abc.R
 import javiercastellanos.com.example.abc.ui.login.LoginScreen
 import javiercastellanos.com.example.abc.ui.sign_up.SignUpScreen
 
-@Preview
-@Composable
-fun WelcomeScreen() {
-    val viewModel = WelcomeViewModel()
-    val toLogged: Boolean by viewModel.toLogged.observeAsState(initial = false)
-    val toSignup: Boolean by viewModel.toSignUp.observeAsState(initial = false)
-    if (toLogged) {
-        LoginScreen()
-    }else{
-        if (toSignup){
-            SignUpScreen()
-        }
-        else{
-            Box(modifier = Modifier.fillMaxSize()) {
-                Image(
-                    painter = painterResource(id = R.drawable.background_welcome),
-                    contentDescription = "Background welcome",
-                    contentScale = ContentScale.FillBounds,
-                    modifier = Modifier.matchParentSize()
-                )
-            }
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
-            ) {
 
-                Image(
-                    painter = painterResource(id = R.drawable.logo2),
-                    contentDescription = "Logo",
-                    contentScale = ContentScale.FillBounds,
-                    modifier = Modifier
-                        .size(300.dp)
-                )
-                Text(text = "")
-                Text(text = "")
-                Button(
-                    onClick = {  viewModel.setToSignUp()},
-                    modifier = Modifier
-                        .padding(16.dp, top = 70.dp)
-                        .background(Color(0XFF0DA89B)),
-                    colors = ButtonDefaults.buttonColors(
-                        Color(0XFF0DA89B)
-                    ),
-                ) {
-                    Text(text = "Create account")
-                }
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(35.dp)
-                ) {
-                    Text(text = "Already have an account? ", modifier = Modifier.padding(top = 10.dp))
-                    Text(text = "Login ",
-                        modifier = Modifier.padding(top = 10.dp, start = 20.dp).clickable { viewModel.setToLogged() })
-                }
-            }
+@Composable
+fun WelcomeScreen(navController: NavController) {
+    Box(modifier = Modifier.fillMaxSize()) {
+        Image(
+            painter = painterResource(id = R.drawable.background_welcome),
+            contentDescription = "Background welcome",
+            contentScale = ContentScale.FillBounds,
+            modifier = Modifier.matchParentSize()
+        )
+    }
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) {
+
+        Image(
+            painter = painterResource(id = R.drawable.logo2),
+            contentDescription = "Logo",
+            contentScale = ContentScale.FillBounds,
+            modifier = Modifier
+                .size(300.dp)
+        )
+        Text(text = "")
+        Text(text = "")
+        Button(
+            onClick = { navController.navigate("SignUpScreen") },
+            modifier = Modifier
+                .padding(16.dp, top = 70.dp)
+                .background(Color(0XFF0DA89B)),
+            colors = ButtonDefaults.buttonColors(
+                Color(0XFF0DA89B)
+            ),
+        ) {
+            Text(text = stringResource(id = R.string.sign_up))
+        }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(35.dp)
+        ) {
+            Text(text = stringResource(id = R.string.already_account), modifier = Modifier.padding(top = 10.dp))
+            Text(text = stringResource(id = R.string.login),
+                modifier = Modifier
+                    .padding(top = 10.dp, start = 20.dp)
+                    .clickable { navController.navigate("loginScreen") })
         }
     }
-
 }

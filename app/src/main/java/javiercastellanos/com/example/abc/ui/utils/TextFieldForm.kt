@@ -26,11 +26,13 @@ fun TextFieldABC(
     label: String,
     keyboardController: SoftwareKeyboardController?,
     modifier: Modifier = Modifier,
+    isEditable: Boolean = true,
     onTextFieldChanged: (String) -> Unit
 ) {
     TextField(
         value = textField,
         onValueChange = { onTextFieldChanged(it) },
+        readOnly = !isEditable,
         keyboardActions = KeyboardActions(
             onDone = { keyboardController?.hideSoftwareKeyboard() }),
         colors = TextFieldDefaults.textFieldColors(

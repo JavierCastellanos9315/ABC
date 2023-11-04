@@ -1,10 +1,14 @@
 package javiercastellanos.com.example.abc.ui.login
 
+import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.navigation.NavController
 import javiercastellanos.com.example.abc.model.LoginDTO
+import javiercastellanos.com.example.abc.model.LoginResponseDTO
 import javiercastellanos.com.example.abc.repository.RemoteUsuario
+import javiercastellanos.com.example.abc.ui.utils.SharePreference
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -27,7 +31,8 @@ class LoginViewModel : ViewModel(){
     fun onPasswordChanged(password: String) {
         _password.value = password
     }
-    fun onLoginClicked() {
+    fun onLoginClicked(sharePreference: SharePreference
+    ,onLoginSucces: () -> Unit) {
         val loginDTO = LoginDTO(
             contrasena = _password.value!!,
             email = _email.value!!
@@ -39,13 +44,19 @@ class LoginViewModel : ViewModel(){
                 _email.value = ""
                 _password.value = ""
                 if(response.code().equals(200)) {
-                    _isLogged.value = true
+                    //_isLogged.value = true
+                    savedPrefUser(response.body()!!, sharePreference)
+                    onLoginSucces()
                 }
 
             } catch (e: Exception) {
 
             }
         }
+    }
+
+    fun savedPrefUser(user: LoginResponseDTO, sharePreference: SharePreference){
+        sharePreference.setUserLogged(user)
     }
 
 }

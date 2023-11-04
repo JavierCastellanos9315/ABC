@@ -27,25 +27,27 @@ import androidx.compose.ui.unit.sp
 import javiercastellanos.com.example.abc.R
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavController
 import javiercastellanos.com.example.abc.ui.login.LoginScreen
 import javiercastellanos.com.example.abc.ui.login.LoginViewModel
 import javiercastellanos.com.example.abc.ui.utils.TextFieldABC
 
 @OptIn(ExperimentalComposeUiApi::class)
-@Preview
 @Composable
-fun SignUpScreen() {
+fun SignUpScreen(navController: NavController) {
     val viewModel = SignUpViewModel()
-    val labelFullName = "Full Name"
-    val labelEmail = "Email"
-    val labelPassword = "Password"
     val fullName: String by viewModel.fullName.observeAsState(initial = "")
     val email: String by viewModel.email.observeAsState(initial = "")
     val password: String by viewModel.password.observeAsState(initial = "")
     val isRegistered: Boolean by viewModel.isRegistered.observeAsState(initial = false)
     val keyboardController = LocalSoftwareKeyboardController.current
     if (isRegistered) {
-        LoginScreen()
+        navController.navigate("loginScreen"){
+            popUpTo("loginScreen"){
+                inclusive = true
+            }
+        }
     }else{
         Box(modifier = Modifier.fillMaxSize()) {
             Image(
@@ -76,7 +78,7 @@ fun SignUpScreen() {
                 item {
 
                     Text(
-                        text = "Registrarme",
+                        text = stringResource(id = R.string.register),
                         textAlign = TextAlign.Center,
                         modifier = Modifier.padding(top = 60.dp, bottom = 100.dp),
                         style = TextStyle(
@@ -89,21 +91,21 @@ fun SignUpScreen() {
 
                     TextFieldABC(
                         textField = fullName,
-                        labelFullName,
+                        stringResource(id = R.string.full_name),
                         keyboardController = keyboardController,
                         onTextFieldChanged = { viewModel.onFullNameChanged(it) })
                 }
                 item {
                     TextFieldABC(
                         textField = email,
-                        labelEmail,
+                        stringResource(id = R.string.email),
                         keyboardController = keyboardController,
                         onTextFieldChanged = { viewModel.onEmailChanged(it) })
                 }
                 item {
                     TextFieldABC(
                         textField = password,
-                        labelPassword,
+                        stringResource(id = R.string.password),
                         keyboardController = keyboardController,
                         onTextFieldChanged = { viewModel.onPasswordChanged(it) })
                 }
@@ -118,7 +120,7 @@ fun SignUpScreen() {
                             Color(0XFF0DA89B)
                         ),
                     ) {
-                        Text(text = "Register")
+                        Text(text = stringResource(id = R.string.register))
                     }
                 }
             }

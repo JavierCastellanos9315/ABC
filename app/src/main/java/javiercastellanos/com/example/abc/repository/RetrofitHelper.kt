@@ -1,8 +1,9 @@
 package javiercastellanos.com.example.abc.apis
 
 import com.google.gson.GsonBuilder
-import javiercastellanos.com.example.abc.BASE_URL
+import javiercastellanos.com.example.abc.ui.utils.BASE_URL
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.security.cert.X509Certificate
@@ -16,15 +17,20 @@ object RetrofitHelper {
     var gson = GsonBuilder()
         .setLenient()
         .create()
+
+    val logLevel = HttpLoggingInterceptor.Level.BODY
+    val loggingInterceptor = HttpLoggingInterceptor().apply {
+        setLevel(logLevel)
+    }
     fun getRetrofit(): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create(gson))
-            .client(createInsecureOkHttpClient())
+            .client(createInsecureOkHttpClient(loggingInterceptor))
             .build()
     }
 
-    fun createInsecureOkHttpClient(): OkHttpClient {
+    fun createInsecureOkHttpClient(loggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
         val trustAllCertificates = arrayOf<TrustManager>(object : X509TrustManager {
             override fun checkClientTrusted(chain: Array<X509Certificate>, authType: String) {
             }
@@ -41,6 +47,7 @@ object RetrofitHelper {
         sslContext.init(null, trustAllCertificates, java.security.SecureRandom())
 
         return OkHttpClient.Builder()
+            .addInterceptor(loggingInterceptor)
             .sslSocketFactory(sslContext.socketFactory, trustAllCertificates[0] as X509TrustManager)
             .hostnameVerifier { hostname, session -> true }
             .build()

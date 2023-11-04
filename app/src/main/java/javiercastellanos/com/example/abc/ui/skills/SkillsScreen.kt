@@ -40,7 +40,6 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -213,7 +212,7 @@ fun skillSelectedConstrain(skill : ComboOption,skillsViewModel: SkillsViewModel)
                     bottom.linkTo(parent.bottom)
                     end.linkTo(erase.start)
                     width = Dimension.preferredWrapContent
-                }, text = skill.text,
+                }, text = skill.descripcion,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )

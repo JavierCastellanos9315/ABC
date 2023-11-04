@@ -26,93 +26,99 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import javiercastellanos.com.example.abc.R
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavController
 import javiercastellanos.com.example.abc.ui.main_menu.MainScreen
+import javiercastellanos.com.example.abc.ui.utils.SharePreference
 import javiercastellanos.com.example.abc.ui.utils.TextFieldABC
 
 @OptIn(ExperimentalComposeUiApi::class)
-@Preview
 @Composable
-fun LoginScreen() {
+fun LoginScreen(navController: NavController) {
     val viewModel = LoginViewModel()
-    val labelEmail = "Email"
-    val labelPassword = "Password"
     val email: String by viewModel.email.observeAsState(initial = "")
     val password: String by viewModel.password.observeAsState(initial = "")
-    val isLogged: Boolean by viewModel.isLogged.observeAsState(initial = false)
     val keyboardController = LocalSoftwareKeyboardController.current
-    if (isLogged){
-        MainScreen()
-    }else {
-        Box(modifier = Modifier.fillMaxSize()) {
-            Image(
-                painter = painterResource(id = R.drawable.background_login),
-                contentDescription = "Background welcome",
-                contentScale = ContentScale.FillBounds,
-                modifier = Modifier.matchParentSize()
-            )
-        }
-        Box(modifier = Modifier.fillMaxSize()) {
+    val sharePreference = SharePreference(LocalContext.current)
+    Box(modifier = Modifier.fillMaxSize()) {
+        Image(
+            painter = painterResource(id = R.drawable.background_login),
+            contentDescription = "Background welcome",
+            contentScale = ContentScale.FillBounds,
+            modifier = Modifier.matchParentSize()
+        )
+    }
+    Box(modifier = Modifier.fillMaxSize()) {
 
-            LazyColumn(
-                modifier = Modifier
-                    .matchParentSize()
-                    .padding(top = 40.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                item {
+        LazyColumn(
+            modifier = Modifier
+                .matchParentSize()
+                .padding(top = 40.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            item {
 
-                    Image(
-                        painter = painterResource(id = R.drawable.logo2),
-                        contentDescription = "Logo",
-                        contentScale = ContentScale.FillBounds,
-                        modifier = Modifier
-                            .size(200.dp)
+                Image(
+                    painter = painterResource(id = R.drawable.logo2),
+                    contentDescription = "Logo",
+                    contentScale = ContentScale.FillBounds,
+                    modifier = Modifier
+                        .size(200.dp)
+                )
+            }
+            item {
+
+                Text(
+                    text = stringResource(id = R.string.login),
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(top = 60.dp, bottom = 100.dp),
+                    style = TextStyle(
+                        fontFamily = MaterialTheme.typography.bodyLarge.fontFamily,
+                        fontSize = 30.sp
                     )
-                }
-                item {
+                )
+            }
+            item {
+                TextFieldABC(
+                    textField = email,
+                    stringResource(id = R.string.email),
+                    keyboardController = keyboardController,
+                    onTextFieldChanged = { viewModel.onEmailChanged(it) })
+            }
+            item {
+                TextFieldABC(
+                    textField = password,
+                    stringResource(id = R.string.password),
+                    keyboardController = keyboardController,
+                    onTextFieldChanged = { viewModel.onPasswordChanged(it) })
+            }
+            item {
+                Button(
+                    onClick = {
+                        viewModel.onLoginClicked(sharePreference, onLoginSucces = {
+                            navController.navigate("mainScreenNavigation") {
+                                popUpTo("welcome") {
+                                    inclusive = true
+                                }
+                            }
+                        })
+                    },
 
-                    Text(
-                        text = "Registrarme",
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(top = 60.dp, bottom = 100.dp),
-                        style = TextStyle(
-                            fontFamily = MaterialTheme.typography.bodyLarge.fontFamily,
-                            fontSize = 30.sp
-                        )
-                    )
-                }
-                item {
-                    TextFieldABC(
-                        textField = email,
-                        labelEmail,
-                        keyboardController = keyboardController,
-                        onTextFieldChanged = { viewModel.onEmailChanged(it) })
-                }
-                item {
-                    TextFieldABC(
-                        textField = password,
-                        labelPassword,
-                        keyboardController = keyboardController,
-                        onTextFieldChanged = { viewModel.onPasswordChanged(it) })
-                }
-                item {
-                    Button(
-                        onClick = { viewModel.onLoginClicked() },
-
-                        modifier = Modifier
-                            .padding(16.dp, top = 70.dp)
-                            .background(Color(0XFF0DA89B)),
-                        colors = ButtonDefaults.buttonColors(
-                            Color(0XFF0DA89B)
-                        ),
-                    ) {
-                        Text(text = "Login", color = Color.White)
-                    }
+                    modifier = Modifier
+                        .padding(16.dp, top = 70.dp)
+                        .background(Color(0XFF0DA89B)),
+                    colors = ButtonDefaults.buttonColors(
+                        Color(0XFF0DA89B)
+                    ),
+                ) {
+                    Text(text = stringResource(id = R.string.login), color = Color.White)
                 }
             }
         }
     }
+
 
 }
 
