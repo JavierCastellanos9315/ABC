@@ -18,8 +18,6 @@ class SignUpViewModel : ViewModel() {
     val email: LiveData<String> = _email
     private val _password = MutableLiveData<String>()
     val password: LiveData<String> = _password
-    private val _isRegistered = MutableLiveData<Boolean>()
-    val isRegistered: LiveData<Boolean> = _isRegistered
     private val viewModelJob = SupervisorJob()
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
     private var remoteUsuario: RemoteUsuario = RemoteUsuario()
@@ -36,7 +34,7 @@ class SignUpViewModel : ViewModel() {
         _password.value = password
     }
 
-    fun onSignUpClicked() {
+    fun onSignUpClicked(onSignUpSuccess: () -> Unit) {
         val registroDTO = RegistroDTO(
             contrasena = _password.value!!,
             email = _email.value!!,
@@ -51,7 +49,7 @@ class SignUpViewModel : ViewModel() {
                 _email.value = ""
                 _password.value = ""
                 if(response.body().equals("successful!")) {
-                    _isRegistered.value = true
+                    onSignUpSuccess()
                 }
 
             } catch (e: Exception) {
