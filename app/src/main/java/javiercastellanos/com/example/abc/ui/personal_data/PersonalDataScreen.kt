@@ -102,14 +102,14 @@ fun MainContent(
     val languages: List<ComboOption> by personalDataViewModel.languages.observeAsState(initial = listOf())
     val softSkills: List<ComboOption> by personalDataViewModel.softSkills.observeAsState(initial = listOf())
     val skills: List<ComboOption> by personalDataViewModel.skills.observeAsState(initial = listOf())
-    val countrySelected: List<ComboOption> by personalDataViewModel.countrySelected.observeAsState(initial = listOf())
-    val languagesSelected: List<ComboOption> by personalDataViewModel.languagesSelected.observeAsState(
+    val countrySelected: List<ComboOption>? by personalDataViewModel.countrySelected.observeAsState(initial = listOf())
+    val languagesSelected: List<ComboOption>? by personalDataViewModel.languagesSelected!!.observeAsState(
         initial = listOf()
     )
-    val softSkillsSelected: List<ComboOption> by personalDataViewModel.softSkillsSelected.observeAsState(
+    val softSkillsSelected: List<ComboOption>? by personalDataViewModel.softSkillsSelected!!.observeAsState(
         initial = listOf()
     )
-    val skillsSelected: List<ComboOption> by personalDataViewModel.skillsSelected.observeAsState(
+    val skillsSelected: List<ComboOption>? by personalDataViewModel.skillsSelected!!.observeAsState(
         initial = listOf()
     )
     val sharePreference = SharePreference(LocalContext.current)
@@ -183,7 +183,7 @@ fun MainContent(
                 options = countries,
                 modifier = Modifier.fillMaxWidth(),
                 onOptionsChosen = { personalDataViewModel.onPaisesChanged(it) },
-                selectedIds = countrySelected.map { it.id })
+                selectedIds = countrySelected?.map { it.id })
         }
         item {
             MultiComboBox(
@@ -191,7 +191,7 @@ fun MainContent(
                 options = languages,
                 modifier = Modifier.fillMaxWidth(),
                 onOptionsChosen = { personalDataViewModel.onLanguagesChanged(it) },
-                selectedIds = languagesSelected.map { it.id }
+                selectedIds = languagesSelected?.map { it.id }
             )
         }
         item {
@@ -200,7 +200,7 @@ fun MainContent(
                 options = softSkills,
                 modifier = Modifier.fillMaxWidth(),
                 onOptionsChosen = { personalDataViewModel.onSoftSkillsChanged(it) },
-                selectedIds = softSkillsSelected.map { it.id })
+                selectedIds = softSkillsSelected?.map { it.id })
         }
         item {
             MultiComboBox(
@@ -208,7 +208,7 @@ fun MainContent(
                 options = skills,
                 modifier = Modifier.fillMaxWidth(),
                 onOptionsChosen = { personalDataViewModel.onSkillsChanged(it) },
-                selectedIds = skillsSelected.map { it.id })
+                selectedIds = skillsSelected?.map { it.id })
         }
         item {
             Row (modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {

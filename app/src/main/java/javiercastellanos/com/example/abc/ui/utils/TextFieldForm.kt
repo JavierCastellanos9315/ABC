@@ -22,7 +22,7 @@ import javiercastellanos.com.example.abc.R
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun TextFieldABC(
-    textField: String,
+    textField: String?,
     label: String,
     keyboardController: SoftwareKeyboardController?,
     modifier: Modifier = Modifier,
@@ -30,7 +30,7 @@ fun TextFieldABC(
     onTextFieldChanged: (String) -> Unit
 ) {
     TextField(
-        value = textField,
+        value = textField ?: "",
         onValueChange = { onTextFieldChanged(it) },
         readOnly = !isEditable,
         keyboardActions = KeyboardActions(
