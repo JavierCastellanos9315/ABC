@@ -43,7 +43,7 @@ class PersonalDataViewModel: ViewModel() {
     val skillsSelected: LiveData<List<ComboOption>>? = _skillsSelected
     private val viewModelJob = SupervisorJob()
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
-    private var remoteUsuario: RemoteUsuario = RemoteUsuario()
+    var remoteUsuario: RemoteUsuario = RemoteUsuario()
 
     fun onSaveInfoClicked(onSaveSuccess: () -> Unit) {
         val candidatoInfoDTO = CandidatoInfoDTO(
@@ -94,7 +94,6 @@ class PersonalDataViewModel: ViewModel() {
 
     fun getInfoInicial(sharePreference: SharePreference) {
         getMetaData(sharePreference)
-        //getInfoUser(sharePreference)
     }
 
     fun getMetaData(sharePreference: SharePreference){

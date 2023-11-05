@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javiercastellanos.com.example.abc.model.ExperienciaLabIn
 import javiercastellanos.com.example.abc.model.ExperienciaLaboralDTO
+import javiercastellanos.com.example.abc.model.ExperienciaLaboralFactoryDTO
 import javiercastellanos.com.example.abc.model.ExperienciaOut
 import javiercastellanos.com.example.abc.repository.RemoteUsuario
 import javiercastellanos.com.example.abc.ui.utils.ComboOption
@@ -21,7 +22,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @HiltViewModel
-class LaboralExperienceViewModel @Inject constructor() : ViewModel() {
+class LaboralExperienceViewModel @Inject constructor( private val remoteUsuario: RemoteUsuario) : ViewModel() {
 
     private val _listExperience = MutableLiveData<List<ExperienciaOut>>()
     val listExperience: LiveData<List<ExperienciaOut>> = _listExperience
@@ -42,8 +43,8 @@ class LaboralExperienceViewModel @Inject constructor() : ViewModel() {
     val rolSelected: LiveData<List<ComboOption>> = _rolSelected
     private val viewModelJob = SupervisorJob()
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
-    private var remoteUsuario: RemoteUsuario = RemoteUsuario()
-    private var idCandidato : Int? = null
+    var idCandidato : Int? = null
+
     fun onRolChanged(rol: List<ComboOption>) {
         _rolSelected.value = rol
     }
@@ -65,7 +66,7 @@ class LaboralExperienceViewModel @Inject constructor() : ViewModel() {
         _workHere.value = checked
     }
 
-    fun onSave(onSaveSuccess: () -> Unit) {
+    fun onSaveClicked(onSaveSuccess: () -> Unit) {
         val experienciaLaboralDTO = ExperienciaLaboralDTO(
             experiencia = ExperienciaLabIn(
                 `actual` = if (_workHere.value!!) 1 else 0,
@@ -77,6 +78,10 @@ class LaboralExperienceViewModel @Inject constructor() : ViewModel() {
             ),
             id_candidato = idCandidato!!
         )
+        save(onSaveSuccess,experienciaLaboralDTO)
+    }
+
+    fun save(onSaveSuccess: () -> Unit,experienciaLaboralDTO: ExperienciaLaboralDTO) {
         uiScope.launch {
             try {
                 val response = remoteUsuario.saveExperienciaLaboral(experienciaLaboralDTO)
@@ -88,7 +93,6 @@ class LaboralExperienceViewModel @Inject constructor() : ViewModel() {
             }
         }
     }
-
     fun getInfoUser(sharePreference: SharePreference){
         uiScope.launch {
             try {

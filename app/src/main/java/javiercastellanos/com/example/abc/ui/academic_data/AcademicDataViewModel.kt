@@ -49,10 +49,6 @@ class AcademicDataViewModel @Inject constructor() : ViewModel() {
         _inProgress.value = checked
     }
 
-    fun onLoginClicked() {
-        TODO("Not yet implemented")
-    }
-
     fun onInstituteEducationChanged(instituteEducation: String) {
         _instituteEducation.value = instituteEducation
     }

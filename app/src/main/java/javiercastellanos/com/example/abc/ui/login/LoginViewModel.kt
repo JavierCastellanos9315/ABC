@@ -23,7 +23,7 @@ class LoginViewModel : ViewModel(){
     val isLogged: LiveData<Boolean> = _isLogged
     private val viewModelJob = SupervisorJob()
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
-    private var remoteUsuario: RemoteUsuario = RemoteUsuario()
+    var remoteUsuario: RemoteUsuario = RemoteUsuario()
 
     fun onEmailChanged(email: String) {
         _email.value = email

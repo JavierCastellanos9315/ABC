@@ -209,7 +209,7 @@ fun MainContentAdd(
                     Text(text = stringResource(id = R.string.cancel), color = Color.Black)
                 }
                 Button(
-                    onClick = { laboralExperienceViewModel.onSave(
+                    onClick = { laboralExperienceViewModel.onSaveClicked(
                         onSaveSuccess = {
                             navController.navigate("LaboralExperienceScreen") {
                                 popUpTo("LaboralExperienceScreen") {
