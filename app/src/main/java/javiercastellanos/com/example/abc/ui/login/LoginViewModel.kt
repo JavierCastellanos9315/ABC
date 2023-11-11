@@ -32,21 +32,32 @@ class LoginViewModel : ViewModel(){
         _password.value = password
     }
     fun onLoginClicked(sharePreference: SharePreference
-    ,onLoginSucces: () -> Unit) {
+    ,onLoginCandidateSucces: () -> Unit
+    , onLoginAdminSucces: () -> Unit, onLoginCompanySucces: () -> Unit) {
         val loginDTO = LoginDTO(
             contrasena = _password.value!!,
             email = _email.value!!
         )
         uiScope.launch {
             try {
-                //remoteUsuario.login(loginDTO)
                 val response = remoteUsuario.login(loginDTO)
                 _email.value = ""
                 _password.value = ""
                 if(response.code().equals(200)) {
                     //_isLogged.value = true
                     savedPrefUser(response.body()!!, sharePreference)
-                    onLoginSucces()
+
+                    when(response.body()!!.id_tipo_usuario) {
+                        1 -> {
+                            onLoginCandidateSucces()
+                        }
+                        2 -> {
+                            onLoginAdminSucces()
+                        }
+                        3 -> {
+                            onLoginCompanySucces()
+                        }
+                    }
                 }
 
             } catch (e: Exception) {

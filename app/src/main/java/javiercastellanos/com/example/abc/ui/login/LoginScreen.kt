@@ -21,7 +21,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import javiercastellanos.com.example.abc.R
@@ -30,7 +29,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
-import javiercastellanos.com.example.abc.ui.main_menu.MainScreen
 import javiercastellanos.com.example.abc.ui.utils.SharePreference
 import javiercastellanos.com.example.abc.ui.utils.TextFieldABC
 
@@ -97,13 +95,27 @@ fun LoginScreen(navController: NavController) {
             item {
                 Button(
                     onClick = {
-                        viewModel.onLoginClicked(sharePreference, onLoginSucces = {
+                        viewModel.onLoginClicked(sharePreference, onLoginCandidateSucces = {
                             navController.navigate("mainScreenNavigation") {
                                 popUpTo("welcome") {
                                     inclusive = true
                                 }
                             }
-                        })
+                        },
+                            onLoginCompanySucces = {
+                                navController.navigate("mainCompanyNavigation") {
+                                    popUpTo("welcome") {
+                                        inclusive = true
+                                    }
+                                }
+                            },
+                            onLoginAdminSucces = {
+                                navController.navigate("mainAdminNavigation") {
+                                    popUpTo("welcome") {
+                                        inclusive = true
+                                    }
+                                }
+                            })
                     },
 
                     modifier = Modifier

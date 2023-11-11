@@ -46,6 +46,8 @@ import javiercastellanos.com.example.abc.ui.utils.MultiComboBox
 import javiercastellanos.com.example.abc.ui.utils.SharePreference
 import javiercastellanos.com.example.abc.ui.utils.SingleComboBox
 import javiercastellanos.com.example.abc.ui.utils.TextFieldABC
+import org.junit.experimental.categories.Categories.ExcludeCategory
+
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable

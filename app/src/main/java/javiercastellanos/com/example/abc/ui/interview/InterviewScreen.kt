@@ -1,4 +1,4 @@
-package javiercastellanos.com.example.abc.ui.expierience
+package javiercastellanos.com.example.abc.ui.interview
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -16,7 +16,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -41,22 +40,21 @@ import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import javiercastellanos.com.example.abc.R
 import javiercastellanos.com.example.abc.model.ExperienciaOut
-import javiercastellanos.com.example.abc.ui.academic_data.AcademicDataViewModel
 import javiercastellanos.com.example.abc.ui.utils.SharePreference
-import org.junit.experimental.categories.Categories.ExcludeCategory
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
-fun LaboralExperienceScreen(navController: NavController, viewModel: LaboralExperienceViewModel = hiltViewModel()) {
+fun InterviewScreen(navController: NavController, viewModel: InterviewViewModel = hiltViewModel()) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     val keyboardController = LocalSoftwareKeyboardController.current
     Scaffold(
@@ -105,13 +103,16 @@ fun LaboralExperienceScreen(navController: NavController, viewModel: LaboralExpe
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun MainContent(
-    padding: PaddingValues, laboralExperienceViewModel: LaboralExperienceViewModel,
+private fun MainContent(
+    padding: PaddingValues, interviewViewModel: InterviewViewModel,
     keyboardController: SoftwareKeyboardController?
 ) {
-    val laboralExperienceList: List<ExperienciaOut>?  by laboralExperienceViewModel.listExperience!!.observeAsState(initial = listOf())
+    val interviewList: List<ExperienciaOut>? by interviewViewModel.listInterviews!!.observeAsState(
+        initial = listOf()
+    )
+    val isDetail: Boolean by interviewViewModel.isDetail.observeAsState(initial = false)
     val sharePreference = SharePreference(LocalContext.current)
-    laboralExperienceViewModel.getInfoUser(sharePreference)
+    interviewViewModel.getInitialData(sharePreference)
     LazyColumn(
         modifier = Modifier.padding(
             top = 96.dp,
@@ -123,7 +124,7 @@ fun MainContent(
     {
         item {
             Text(
-                text = stringResource(id = R.string.work_experience),
+                text = stringResource(id = R.string.scheduled_interviews),
                 style = MaterialTheme.typography.titleLarge,
                 color = Color.Black
             )
@@ -146,27 +147,33 @@ fun MainContent(
                     .width(200.dp)
             )
         }
-        if (laboralExperienceList?.isNotEmpty() == true) {
-            laboralExperienceList!!.forEach {
+        if (interviewList?.isNotEmpty() == true) {
+            interviewList!!.forEach {
                 item {
-                    itemAcademicData(rol = it.Rol.rol, companyName = it.nombre_empresa, startDate = it.fecha_inicio, endDate = it.fecha_fin)
+                    itemInterviewData(
+                        companyName = it.nombre_empresa,
+                        startDate = it.fecha_inicio,
+                        isDetail
+                    )
                 }
             }
         } else {
             item {
                 Text(
-                    text = stringResource(id = R.string.no_experience),
+                    text = stringResource(id = R.string.no_scheduled_interviews),
                     style = MaterialTheme.typography.titleLarge,
                     color = Color.Black
                 )
             }
         }
-
-
     }
 }
 @Composable
-fun itemAcademicData(rol:String?, companyName: String?, startDate: String?, endDate: String?) {
+private fun itemInterviewData(
+    companyName: String?,
+    startDate: String?,
+    isDetalle: Boolean
+) {
     Box(modifier = Modifier.fillMaxWidth()) {
         Column {
 
@@ -184,54 +191,56 @@ fun itemAcademicData(rol:String?, companyName: String?, startDate: String?, endD
                         .height(100.dp)
                         .weight(3f)
                 ) {
-                    val (name, carrer, time) = createRefs()
-                    Text(text = rol!!, modifier = Modifier
-                        .constrainAs(name) {
+                    val (nameCompany, time, detail) = createRefs()
+                    Text(text = companyName!!, modifier = Modifier
+                        .constrainAs(nameCompany) {
                             top.linkTo(parent.top, margin = 2.dp)
                             start.linkTo(parent.start, margin = 20.dp)
                         }
                         .fillMaxWidth(1f), fontWeight = FontWeight.Bold)
                     Row(modifier = Modifier
-                        .constrainAs(carrer) {
+                        .constrainAs(time) {
                             top.linkTo(parent.top)
                             bottom.linkTo(parent.bottom)
                             start.linkTo(parent.start, margin = 20.dp)
                         }
                         .fillMaxWidth(1f)) {
-                        Text(text = companyName!!, modifier = Modifier.fillMaxWidth())
+                        Text(text = startDate!!, modifier = Modifier.fillMaxWidth())
                     }
-                    Row(modifier = Modifier
-                        .constrainAs(time) {
-                            bottom.linkTo(parent.bottom, margin = 2.dp)
-                            start.linkTo(parent.start, margin = 20.dp)
+                    if (isDetalle) {
+                        Row(modifier = Modifier
+                            .constrainAs(detail) {
+                                bottom.linkTo(parent.bottom, margin = 2.dp)
+                                start.linkTo(parent.start, margin = 20.dp)
+                            }
+                            .fillMaxWidth(1f)) {
+                            Text(
+                                text = stringResource(id = R.string.check_results),
+                                modifier = Modifier.fillMaxWidth(),
+                                color = colorResource(id = R.color.borderText),
+                                style = TextStyle(textDecoration = TextDecoration.Underline)
+                            )
+
                         }
-                        .fillMaxWidth(1f)) {
-                        Text(text = "$startDate - $endDate", modifier = Modifier.fillMaxWidth())
                     }
                 }
-
-                /*Image(
-                    painter = painterResource(id = R.drawable.outline_delete_24),
-                    contentDescription = "delete",
-                    modifier = Modifier.weight(1f)
-                )*/
             }
-            Spacer(
-                modifier = Modifier
-                    .padding(bottom = 10.dp)
-                    .width(200.dp)
-            )
-            Spacer(
-                modifier = Modifier
-                    .background(Color.Black)
-                    .padding(bottom = 1.dp)
-                    .fillMaxWidth()
-            )
-            Spacer(
-                modifier = Modifier
-                    .padding(bottom = 20.dp)
-                    .width(200.dp)
-            )
         }
+        Spacer(
+            modifier = Modifier
+                .padding(bottom = 10.dp)
+                .width(200.dp)
+        )
+        Spacer(
+            modifier = Modifier
+                .background(Color.Black)
+                .padding(bottom = 1.dp)
+                .fillMaxWidth()
+        )
+        Spacer(
+            modifier = Modifier
+                .padding(bottom = 20.dp)
+                .width(200.dp)
+        )
     }
 }

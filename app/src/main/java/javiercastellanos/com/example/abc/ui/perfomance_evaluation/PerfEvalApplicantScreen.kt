@@ -1,4 +1,4 @@
-package javiercastellanos.com.example.abc.ui.expierience
+package javiercastellanos.com.example.abc.ui.perfomance_evaluation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -12,14 +12,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -43,20 +39,20 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import javiercastellanos.com.example.abc.R
 import javiercastellanos.com.example.abc.model.ExperienciaOut
-import javiercastellanos.com.example.abc.ui.academic_data.AcademicDataViewModel
 import javiercastellanos.com.example.abc.ui.utils.SharePreference
-import org.junit.experimental.categories.Categories.ExcludeCategory
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
-fun LaboralExperienceScreen(navController: NavController, viewModel: LaboralExperienceViewModel = hiltViewModel()) {
+fun PerfEvalApplicantScreen(
+    navController: NavController,
+    viewModel: PerformanEvaluationViewModel = hiltViewModel()
+) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     val keyboardController = LocalSoftwareKeyboardController.current
     Scaffold(
@@ -84,19 +80,6 @@ fun LaboralExperienceScreen(navController: NavController, viewModel: LaboralExpe
                 },
                 scrollBehavior = scrollBehavior
             )
-        },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = { navController.navigate("AddLaboralExperienceScreen") },
-                containerColor = colorResource(id = R.color.colorButtodAdd),
-                shape = CircleShape,
-            ) {
-                Icon(
-                    Icons.Default.Add,
-                    contentDescription = "Add",
-                    tint = colorResource(id = R.color.colorButtonPlus)
-                )
-            }
         }
     ) { innerPadding ->
         MainContent(innerPadding, viewModel, keyboardController)
@@ -105,13 +88,15 @@ fun LaboralExperienceScreen(navController: NavController, viewModel: LaboralExpe
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun MainContent(
-    padding: PaddingValues, laboralExperienceViewModel: LaboralExperienceViewModel,
+private fun MainContent(
+    padding: PaddingValues, performanceEvaluationViewModel: PerformanEvaluationViewModel,
     keyboardController: SoftwareKeyboardController?
 ) {
-    val laboralExperienceList: List<ExperienciaOut>?  by laboralExperienceViewModel.listExperience!!.observeAsState(initial = listOf())
+    val listPerformanceEvaluations: List<ExperienciaOut>? by performanceEvaluationViewModel.listPerformanceEvaluations!!.observeAsState(
+        initial = listOf()
+    )
     val sharePreference = SharePreference(LocalContext.current)
-    laboralExperienceViewModel.getInfoUser(sharePreference)
+    performanceEvaluationViewModel.getInfoCandidate(sharePreference)
     LazyColumn(
         modifier = Modifier.padding(
             top = 96.dp,
@@ -123,7 +108,7 @@ fun MainContent(
     {
         item {
             Text(
-                text = stringResource(id = R.string.work_experience),
+                text = stringResource(id = R.string.performance_evaluation),
                 style = MaterialTheme.typography.titleLarge,
                 color = Color.Black
             )
@@ -146,10 +131,14 @@ fun MainContent(
                     .width(200.dp)
             )
         }
-        if (laboralExperienceList?.isNotEmpty() == true) {
-            laboralExperienceList!!.forEach {
+        if (listPerformanceEvaluations?.isNotEmpty() == true) {
+            listPerformanceEvaluations!!.forEach {
                 item {
-                    itemAcademicData(rol = it.Rol.rol, companyName = it.nombre_empresa, startDate = it.fecha_inicio, endDate = it.fecha_fin)
+                    itemPerfomanceEvalData(
+                        companyName = it.Rol.rol,
+                        stateEval = it.nombre_empresa,
+                        endDate = it.fecha_fin
+                    )
                 }
             }
         } else {
@@ -165,56 +154,40 @@ fun MainContent(
 
     }
 }
+
 @Composable
-fun itemAcademicData(rol:String?, companyName: String?, startDate: String?, endDate: String?) {
+fun itemPerfomanceEvalData(companyName: String?, stateEval: String?, endDate: String?) {
     Box(modifier = Modifier.fillMaxWidth()) {
         Column {
-
-            Row(modifier = Modifier) {
-                Image(
-                    painter = painterResource(id = R.drawable.img_work),
-                    contentDescription = "image_work",
-                    contentScale = ContentScale.FillBounds,
-                    modifier = Modifier
-                        .height(100.dp)
-                        .weight(1.5f)
-                )
-                ConstraintLayout(
-                    modifier = Modifier
-                        .height(100.dp)
-                        .weight(3f)
-                ) {
-                    val (name, carrer, time) = createRefs()
-                    Text(text = rol!!, modifier = Modifier
-                        .constrainAs(name) {
-                            top.linkTo(parent.top, margin = 2.dp)
-                            start.linkTo(parent.start, margin = 20.dp)
-                        }
-                        .fillMaxWidth(1f), fontWeight = FontWeight.Bold)
-                    Row(modifier = Modifier
-                        .constrainAs(carrer) {
-                            top.linkTo(parent.top)
-                            bottom.linkTo(parent.bottom)
-                            start.linkTo(parent.start, margin = 20.dp)
-                        }
-                        .fillMaxWidth(1f)) {
-                        Text(text = companyName!!, modifier = Modifier.fillMaxWidth())
+            ConstraintLayout(
+                modifier = Modifier
+                    .height(100.dp)
+                    .weight(3f)
+            ) {
+                val (name, state, date) = createRefs()
+                Text(text = companyName!!, modifier = Modifier
+                    .constrainAs(name) {
+                        top.linkTo(parent.top, margin = 2.dp)
+                        start.linkTo(parent.start, margin = 20.dp)
                     }
-                    Row(modifier = Modifier
-                        .constrainAs(time) {
-                            bottom.linkTo(parent.bottom, margin = 2.dp)
-                            start.linkTo(parent.start, margin = 20.dp)
-                        }
-                        .fillMaxWidth(1f)) {
-                        Text(text = "$startDate - $endDate", modifier = Modifier.fillMaxWidth())
+                    .fillMaxWidth(1f), fontWeight = FontWeight.Bold)
+                Row(modifier = Modifier
+                    .constrainAs(state) {
+                        top.linkTo(parent.top)
+                        bottom.linkTo(parent.bottom)
+                        start.linkTo(parent.start, margin = 20.dp)
                     }
+                    .fillMaxWidth(1f)) {
+                    Text(text = stateEval!!, modifier = Modifier.fillMaxWidth())
                 }
-
-                /*Image(
-                    painter = painterResource(id = R.drawable.outline_delete_24),
-                    contentDescription = "delete",
-                    modifier = Modifier.weight(1f)
-                )*/
+                Row(modifier = Modifier
+                    .constrainAs(date) {
+                        bottom.linkTo(parent.bottom, margin = 2.dp)
+                        start.linkTo(parent.start, margin = 20.dp)
+                    }
+                    .fillMaxWidth(1f)) {
+                    Text(text = endDate!!, modifier = Modifier.fillMaxWidth())
+                }
             }
             Spacer(
                 modifier = Modifier

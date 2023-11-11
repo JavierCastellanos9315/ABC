@@ -34,7 +34,7 @@ import javiercastellanos.com.example.abc.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(navController: NavController) {
+fun MainMenuAdminScreen(navController: NavController) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -91,7 +91,7 @@ private fun MainContent(padding: PaddingValues, navController: NavController) {
                             .padding(end = 10.dp)
                             .fillMaxSize()
                             .weight(1f)
-                            .clickable { navController.navigate("ProfileScreen") }
+                            .clickable { navController.navigate("NewContractScreen") }
                     ) {
                         val (image, contentDescription) = createRefs()
 
@@ -110,7 +110,7 @@ private fun MainContent(padding: PaddingValues, navController: NavController) {
                                 .fillMaxSize()
 
                         )
-                        Text(text = stringResource(id = R.string.profile), textAlign = TextAlign.Center,modifier = Modifier.constrainAs(contentDescription) {
+                        Text(text = stringResource(id = R.string.new_contract),textAlign = TextAlign.Center, modifier = Modifier.constrainAs(contentDescription) {
                             top.linkTo(parent.top, margin = 100.dp)
                             bottom.linkTo(parent.bottom)
                             start.linkTo(parent.start)
@@ -122,74 +122,7 @@ private fun MainContent(padding: PaddingValues, navController: NavController) {
                             .padding(start = 10.dp)
                             .fillMaxSize()
                             .weight(1f)
-                            .clickable { navController.navigate("TecnicTestScreen") }
-                    ) {
-                        val (image, contentDescription) = createRefs()
-
-                        Image(
-                            painter = painterResource(id = R.drawable.background_test),
-                            contentDescription = "Logo",
-
-                            contentScale = ContentScale.FillBounds,
-                            modifier = Modifier
-                                .constrainAs(image) {
-                                    top.linkTo(parent.top)
-                                    bottom.linkTo(parent.bottom)
-                                    start.linkTo(parent.start)
-                                    end.linkTo(parent.end)
-                                }
-                                .fillMaxSize()
-                        )
-                        Text(text = stringResource(id = R.string.technical_tests), textAlign = TextAlign.Center,modifier = Modifier.constrainAs(contentDescription) {
-                            top.linkTo(parent.top, margin = 100.dp)
-                            bottom.linkTo(parent.bottom)
-                            start.linkTo(parent.start)
-                            end.linkTo(parent.end)
-                        })
-                    }
-                }
-                Row(
-                    modifier = Modifier
-                        .padding(top = 10.dp, bottom = 10.dp)
-                        .fillMaxWidth()
-                        .height(200.dp)
-                ) {
-                    ConstraintLayout(
-                        modifier = Modifier
-                            .padding(end = 10.dp)
-                            .fillMaxSize()
-                            .weight(1f)
-                    ) {
-                        val (image, contentDescription) = createRefs()
-
-                        Image(
-                            painter = painterResource(id = R.drawable.background_performance),
-                            contentDescription = "Logo",
-
-                            contentScale = ContentScale.FillBounds,
-                            modifier = Modifier
-                                .constrainAs(image) {
-                                    top.linkTo(parent.top)
-                                    bottom.linkTo(parent.bottom)
-                                    start.linkTo(parent.start)
-                                    end.linkTo(parent.end)
-                                }
-                                .fillMaxSize()
-                        )
-                        Text(text = stringResource(id = R.string.performance_evaluation),
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.fillMaxWidth().constrainAs(contentDescription) {
-                            top.linkTo(parent.top, margin = 100.dp)
-                            bottom.linkTo(parent.bottom)
-                            start.linkTo(parent.start)
-                            end.linkTo(parent.end)
-                        })
-                    }
-                    ConstraintLayout(
-                        modifier = Modifier
-                            .padding(start = 10.dp)
-                            .fillMaxSize()
-                            .weight(1f)
+                            .clickable { navController.navigate("InterviewScreen") }
                     ) {
                         val (image, contentDescription) = createRefs()
 
@@ -207,7 +140,7 @@ private fun MainContent(padding: PaddingValues, navController: NavController) {
                                 }
                                 .fillMaxSize()
                         )
-                        Text(text = stringResource(id = R.string.interviews), textAlign = TextAlign.Center,modifier = Modifier.constrainAs(contentDescription) {
+                        Text(text = stringResource(id = R.string.interviews),textAlign = TextAlign.Center, modifier = Modifier.constrainAs(contentDescription) {
                             top.linkTo(parent.top, margin = 100.dp)
                             bottom.linkTo(parent.bottom)
                             start.linkTo(parent.start)
@@ -217,12 +150,6 @@ private fun MainContent(padding: PaddingValues, navController: NavController) {
                 }
             }
         }
-        Image(
-            painter = painterResource(id = R.drawable.img_tips),
-            contentDescription = "tips",
-            contentScale = ContentScale.FillBounds,
-            modifier = Modifier.fillMaxSize()
-        )
     }
 
 }

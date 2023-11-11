@@ -1,7 +1,8 @@
-package javiercastellanos.com.example.abc.ui.expierience
+package javiercastellanos.com.example.abc.ui.tecnic_test
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -12,14 +13,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -43,20 +40,23 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import javiercastellanos.com.example.abc.R
-import javiercastellanos.com.example.abc.model.ExperienciaOut
-import javiercastellanos.com.example.abc.ui.academic_data.AcademicDataViewModel
+import javiercastellanos.com.example.abc.model.TestResponseDTOItem
 import javiercastellanos.com.example.abc.ui.utils.SharePreference
-import org.junit.experimental.categories.Categories.ExcludeCategory
+
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
-fun LaboralExperienceScreen(navController: NavController, viewModel: LaboralExperienceViewModel = hiltViewModel()) {
+fun TechnicTestScreen(
+    navController: NavController,
+    viewModel: TechnicTestViewModel = hiltViewModel()
+) {
+
+
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     val keyboardController = LocalSoftwareKeyboardController.current
     Scaffold(
@@ -86,32 +86,25 @@ fun LaboralExperienceScreen(navController: NavController, viewModel: LaboralExpe
             )
         },
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = { navController.navigate("AddLaboralExperienceScreen") },
-                containerColor = colorResource(id = R.color.colorButtodAdd),
-                shape = CircleShape,
-            ) {
-                Icon(
-                    Icons.Default.Add,
-                    contentDescription = "Add",
-                    tint = colorResource(id = R.color.colorButtonPlus)
-                )
-            }
         }
     ) { innerPadding ->
-        MainContent(innerPadding, viewModel, keyboardController)
+        MainContent(navController, innerPadding, viewModel, keyboardController)
     }
 }
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun MainContent(
-    padding: PaddingValues, laboralExperienceViewModel: LaboralExperienceViewModel,
+private fun MainContent(
+    navController: NavController,
+    padding: PaddingValues,
+    technicTestViewModel: TechnicTestViewModel,
     keyboardController: SoftwareKeyboardController?
 ) {
-    val laboralExperienceList: List<ExperienciaOut>?  by laboralExperienceViewModel.listExperience!!.observeAsState(initial = listOf())
     val sharePreference = SharePreference(LocalContext.current)
-    laboralExperienceViewModel.getInfoUser(sharePreference)
+    val listTests: List<TestResponseDTOItem>? by technicTestViewModel.listTests!!.observeAsState(
+        initial = listOf()
+    )
+    technicTestViewModel.getInfoUser(sharePreference = sharePreference)
     LazyColumn(
         modifier = Modifier.padding(
             top = 96.dp,
@@ -123,7 +116,7 @@ fun MainContent(
     {
         item {
             Text(
-                text = stringResource(id = R.string.work_experience),
+                text = stringResource(id = R.string.tecnic_test),
                 style = MaterialTheme.typography.titleLarge,
                 color = Color.Black
             )
@@ -146,16 +139,22 @@ fun MainContent(
                     .width(200.dp)
             )
         }
-        if (laboralExperienceList?.isNotEmpty() == true) {
-            laboralExperienceList!!.forEach {
+        if (listTests?.isNotEmpty() == true) {
+            listTests!!.forEach {
                 item {
-                    itemAcademicData(rol = it.Rol.rol, companyName = it.nombre_empresa, startDate = it.fecha_inicio, endDate = it.fecha_fin)
+                    itemTest(
+                        it.nombre_evaluacion,
+                        it.estado,
+                        it.calificacion,
+                        it.id,
+                        navController
+                    )
                 }
             }
         } else {
             item {
                 Text(
-                    text = stringResource(id = R.string.no_experience),
+                    text = stringResource(id = R.string.no_academic_data),
                     style = MaterialTheme.typography.titleLarge,
                     color = Color.Black
                 )
@@ -165,15 +164,28 @@ fun MainContent(
 
     }
 }
+
+
 @Composable
-fun itemAcademicData(rol:String?, companyName: String?, startDate: String?, endDate: String?) {
-    Box(modifier = Modifier.fillMaxWidth()) {
+private fun itemTest(
+    name: String?,
+    state: String?,
+    score: String?,
+    idTest: Int,
+    navController: NavController
+) {
+    Box(modifier = Modifier
+        .fillMaxWidth()
+        ) {
         Column {
 
-            Row(modifier = Modifier) {
+            Row(modifier = Modifier.clickable { if(state.equals("Pendiente"))
+            {
+                navController.navigate("DoingTestScreen/$idTest")
+            } }) {
                 Image(
-                    painter = painterResource(id = R.drawable.img_work),
-                    contentDescription = "image_work",
+                    painter = painterResource(id = R.drawable.img_academic),
+                    contentDescription = "image_academic",
                     contentScale = ContentScale.FillBounds,
                     modifier = Modifier
                         .height(100.dp)
@@ -184,37 +196,32 @@ fun itemAcademicData(rol:String?, companyName: String?, startDate: String?, endD
                         .height(100.dp)
                         .weight(3f)
                 ) {
-                    val (name, carrer, time) = createRefs()
-                    Text(text = rol!!, modifier = Modifier
-                        .constrainAs(name) {
+                    val (nameConstraint, stateConstraint, scoreConstraint) = createRefs()
+                    Text(text = name ?: " ", modifier = Modifier
+                        .constrainAs(nameConstraint) {
                             top.linkTo(parent.top, margin = 2.dp)
                             start.linkTo(parent.start, margin = 20.dp)
                         }
-                        .fillMaxWidth(1f), fontWeight = FontWeight.Bold)
+                        .fillMaxWidth(1f),
+                        fontWeight = FontWeight.Bold)
                     Row(modifier = Modifier
-                        .constrainAs(carrer) {
+                        .constrainAs(stateConstraint) {
                             top.linkTo(parent.top)
                             bottom.linkTo(parent.bottom)
                             start.linkTo(parent.start, margin = 20.dp)
                         }
                         .fillMaxWidth(1f)) {
-                        Text(text = companyName!!, modifier = Modifier.fillMaxWidth())
+                        Text(text = state ?: " ", modifier = Modifier.fillMaxWidth())
                     }
                     Row(modifier = Modifier
-                        .constrainAs(time) {
+                        .constrainAs(scoreConstraint) {
                             bottom.linkTo(parent.bottom, margin = 2.dp)
                             start.linkTo(parent.start, margin = 20.dp)
                         }
                         .fillMaxWidth(1f)) {
-                        Text(text = "$startDate - $endDate", modifier = Modifier.fillMaxWidth())
+                        Text(text = score ?: " ", modifier = Modifier.fillMaxWidth())
                     }
                 }
-
-                /*Image(
-                    painter = painterResource(id = R.drawable.outline_delete_24),
-                    contentDescription = "delete",
-                    modifier = Modifier.weight(1f)
-                )*/
             }
             Spacer(
                 modifier = Modifier

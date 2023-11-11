@@ -1,4 +1,4 @@
-package javiercastellanos.com.example.abc.ui.expierience
+package javiercastellanos.com.example.abc.ui.new_contract
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -6,20 +6,15 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -31,7 +26,6 @@ import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -50,13 +44,13 @@ import javiercastellanos.com.example.abc.R
 import javiercastellanos.com.example.abc.ui.utils.ComboOption
 import javiercastellanos.com.example.abc.ui.utils.SharePreference
 import javiercastellanos.com.example.abc.ui.utils.SingleComboBox
-import javiercastellanos.com.example.abc.ui.utils.TextFieldABC
-import org.junit.experimental.categories.Categories.ExcludeCategory
 
-@ExcludeCategory
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
-fun LaboralExperienceAddScreen(navController: NavController,viewModel: LaboralExperienceViewModel = hiltViewModel()) {
+fun NewContractScreen(
+    navController: NavController,
+    viewModel: NewContractViewModel = hiltViewModel()
+) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     val keyboardController = LocalSoftwareKeyboardController.current
     Scaffold(
@@ -86,27 +80,35 @@ fun LaboralExperienceAddScreen(navController: NavController,viewModel: LaboralEx
             )
         },
     ) { innerPadding ->
-        MainContentAdd(innerPadding, viewModel, keyboardController, navController)
+        MainContent(innerPadding, viewModel, keyboardController, navController)
     }
 }
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun MainContentAdd(
-    padding: PaddingValues, laboralExperienceViewModel: LaboralExperienceViewModel,
-    keyboardController: SoftwareKeyboardController?, navController: NavController
+private fun MainContent(
+    padding: PaddingValues, newContractViewModel: NewContractViewModel,
+    keyboardController: SoftwareKeyboardController?,
+    navController: NavController
 ) {
-    val companyName: String by laboralExperienceViewModel.companyName.observeAsState(initial = "")
-    val startYear: String by laboralExperienceViewModel.startDate.observeAsState(initial = "")
-    val finalYear: String by laboralExperienceViewModel.finalDate.observeAsState(initial = "")
-    val description: String by laboralExperienceViewModel.description.observeAsState(initial = "")
-    val workHere : Boolean by laboralExperienceViewModel.workHere.observeAsState(initial = false)
-    val roles : List<ComboOption> by laboralExperienceViewModel.roles.observeAsState(initial = listOf())
-    val rolSelected: List<ComboOption> by laboralExperienceViewModel.rolSelected.observeAsState(
+    val applicant: List<ComboOption> by newContractViewModel.applicant.observeAsState(initial = listOf())
+    val company: List<ComboOption> by newContractViewModel.company.observeAsState(initial = listOf())
+    val project: List<ComboOption> by newContractViewModel.project.observeAsState(initial = listOf())
+    val rol: List<ComboOption> by newContractViewModel.rol.observeAsState(initial = listOf())
+    val applicantSelected: List<ComboOption>? by newContractViewModel.applicantSelected.observeAsState(
+        initial = listOf()
+    )
+    val companySelected: List<ComboOption>? by newContractViewModel.companySelected!!.observeAsState(
+        initial = listOf()
+    )
+    val projectSelected: List<ComboOption>? by newContractViewModel.projectSelected!!.observeAsState(
+        initial = listOf()
+    )
+    val rolSelected: List<ComboOption>? by newContractViewModel.rolSelected!!.observeAsState(
         initial = listOf()
     )
     val sharePreference = SharePreference(LocalContext.current)
-    laboralExperienceViewModel.getMetaData(sharePreference = sharePreference)
+    newContractViewModel.getInfoInicial(sharePreference)
     LazyColumn(
         modifier = Modifier.padding(
             top = 96.dp,
@@ -118,88 +120,66 @@ fun MainContentAdd(
     {
         item {
             Text(
-                text = stringResource(id = R.string.work_experience),
+                text = stringResource(id = R.string.new_contract),
                 style = MaterialTheme.typography.titleLarge,
                 color = Color.Black
             )
         }
         item {
-            Spacer(modifier = Modifier
-                .padding(bottom = 10.dp)
-                .width(200.dp))
-            Spacer(modifier = Modifier
-                .background(Color.Black)
-                .padding(bottom = 1.dp)
-                .fillMaxWidth())
-            Spacer(modifier = Modifier
-                .padding(bottom = 20.dp)
-                .width(200.dp))
-        }
-        item {
-            TextFieldABC(
-                textField = companyName,
-                label = stringResource(id = R.string.company_name),
-                keyboardController = keyboardController,
-                modifier = Modifier.fillMaxWidth(),
-                onTextFieldChanged = { laboralExperienceViewModel.onCompanyNameChanged(it) })
+            Spacer(
+                modifier = Modifier
+                    .padding(bottom = 10.dp)
+                    .width(200.dp)
+            )
+            Spacer(
+                modifier = Modifier
+                    .background(Color.Black)
+                    .padding(bottom = 1.dp)
+                    .fillMaxWidth()
+            )
+            Spacer(
+                modifier = Modifier
+                    .padding(bottom = 20.dp)
+                    .width(200.dp)
+            )
         }
         item {
             SingleComboBox(
-                options = roles,
-                selectedIds = rolSelected.map { it.id },
+                labelText = stringResource(id = R.string.applicant),
+                options = applicant,
+                modifier = Modifier.fillMaxWidth(),
+                onOptionsChosen = { newContractViewModel.onApplicantChanged(it) },
+                selectedIds = applicantSelected?.map { it.id })
+        }
+        item {
+            SingleComboBox(
+                labelText = stringResource(id = R.string.company),
+                options = company,
+                modifier = Modifier.fillMaxWidth(),
+                onOptionsChosen = { newContractViewModel.onCompanyChanged(it) },
+                selectedIds = companySelected?.map { it.id }
+            )
+        }
+        item {
+            SingleComboBox(
+                labelText = stringResource(id = R.string.project),
+                options = project,
+                modifier = Modifier.fillMaxWidth(),
+                onOptionsChosen = { newContractViewModel.onProjectChanged(it) },
+                selectedIds = projectSelected?.map { it.id })
+        }
+        item {
+            SingleComboBox(
                 labelText = stringResource(id = R.string.rol),
+                options = rol,
                 modifier = Modifier.fillMaxWidth(),
-                onOptionsChosen = { laboralExperienceViewModel.onRolChanged(it) })
+                onOptionsChosen = { newContractViewModel.onRolChanged(it) },
+                selectedIds = rolSelected?.map { it.id })
         }
         item {
-            Row(verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .background(Color.White)
-                    .fillMaxSize()) {
-                Checkbox(
-                    checked = workHere,
-                    onCheckedChange = { newCheckedState ->
-                        laboralExperienceViewModel.onWorkHere(newCheckedState)
-                    },
-                    colors = CheckboxDefaults.colors(
-                        checkedColor = colorResource(id = R.color.borderText)
-                    )
-                )
-                Text(text = stringResource(id = R.string.working))
-            }
-        }
-        item {
-            TextFieldABC(
-                textField = startYear,
-                label = stringResource(id = R.string.start_date),
-                keyboardController = keyboardController,
-                modifier = Modifier.fillMaxWidth(),
-                onTextFieldChanged = { laboralExperienceViewModel.onStartDateChanged(it) })
-
-        }
-        item {
-            TextFieldABC(
-                textField = finalYear,
-                label = stringResource(id = R.string.end_date),
-                keyboardController = keyboardController,
-                modifier = Modifier.fillMaxWidth(),
-                isEditable = !workHere,
-                onTextFieldChanged = { laboralExperienceViewModel.onFinalDateChanged(it) })
-        }
-        item {
-            TextFieldABC(
-                textField = description,
-                label = stringResource(id = R.string.description),
-                keyboardController = keyboardController,
-                modifier = Modifier.fillMaxWidth().height(200.dp),
-                onTextFieldChanged = { laboralExperienceViewModel.onDescriptionChanged(it) })
-        }
-
-
-        item {
-            Row (modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
                 Button(
-                    onClick = { navController.popBackStack()},
+                    onClick = { navController.popBackStack() },
                     modifier = Modifier
                         .padding(end = 20.dp, top = 70.dp),
                     colors = ButtonDefaults.buttonColors(
@@ -211,15 +191,9 @@ fun MainContentAdd(
                     Text(text = stringResource(id = R.string.cancel), color = Color.Black)
                 }
                 Button(
-                    onClick = { laboralExperienceViewModel.onSaveClicked(
-                        onSaveSuccess = {
-                            navController.navigate("LaboralExperienceScreen") {
-                                popUpTo("LaboralExperienceScreen") {
-                                    inclusive = true
-                                }
-                            }
-                        }
-                    ) },
+                    onClick = {
+                        newContractViewModel.onSaveInfoClicked(onSaveSuccess = { navController.popBackStack() })
+                    },
 
                     modifier = Modifier
                         .padding(start = 20.dp, top = 70.dp),

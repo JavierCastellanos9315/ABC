@@ -30,7 +30,7 @@ class AcademicDataViewModel @Inject constructor() : ViewModel() {
     private val _inProgress = MutableLiveData<Boolean>()
     val inProgress: LiveData<Boolean> = _inProgress
     private val _listAcademic = MutableLiveData<List<InformacionAcademicaOut>>()
-    val listAcademic: LiveData<List<InformacionAcademicaOut>> = _listAcademic
+    val listAcademic: LiveData<List<InformacionAcademicaOut>>? = _listAcademic
     private val viewModelJob = SupervisorJob()
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
     private var remoteUsuario: RemoteUsuario = RemoteUsuario()

@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javiercastellanos.com.example.abc.model.ExperienciaLabIn
 import javiercastellanos.com.example.abc.model.ExperienciaLaboralDTO
-import javiercastellanos.com.example.abc.model.ExperienciaLaboralFactoryDTO
 import javiercastellanos.com.example.abc.model.ExperienciaOut
 import javiercastellanos.com.example.abc.repository.RemoteUsuario
 import javiercastellanos.com.example.abc.ui.utils.ComboOption
@@ -22,10 +21,10 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @HiltViewModel
-class LaboralExperienceViewModel @Inject constructor( private val remoteUsuario: RemoteUsuario) : ViewModel() {
+open class LaboralExperienceViewModel @Inject constructor(private val remoteUsuario: RemoteUsuario) : ViewModel() {
 
     private val _listExperience = MutableLiveData<List<ExperienciaOut>>()
-    val listExperience: LiveData<List<ExperienciaOut>> = _listExperience
+    val listExperience: LiveData<List<ExperienciaOut>>? = _listExperience
 
     private val _companyName = MutableLiveData<String>()
     val companyName: LiveData<String> = _companyName
