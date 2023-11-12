@@ -53,7 +53,7 @@ class LoginViewModelTest {
         viewModel.email.observeForever(emailObserver)
         viewModel.password.observeForever(passwordObserver)
 
-        coEvery { remoteUsuario.login(any()) } returns Response.success(200, LoginResponseDTO(id_tipo_usuario = 1,
+        coEvery { remoteUsuario.login(any()) } returns Response.success(200, LoginResponseDTO(id_tipo_usuario = 2,
             token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InpyZXlAZW1haWwuY29tIiwiaWQiOjEsImlhdCI6MTY5OTE0MDY5NH0.iD31TM_8mYweu2nawV7oYG3mztdEYauiYVJ9VlPl5Dc",
             usuario = "zrey@email.com"
         )) // Simulate a successful login

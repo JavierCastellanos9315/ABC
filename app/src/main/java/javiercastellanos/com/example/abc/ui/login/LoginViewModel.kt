@@ -49,10 +49,10 @@ class LoginViewModel : ViewModel(){
 
                     when(response.body()!!.id_tipo_usuario) {
                         1 -> {
-                            onLoginCandidateSucces()
+                            onLoginAdminSucces()
                         }
                         2 -> {
-                            onLoginAdminSucces()
+                            onLoginCandidateSucces()
                         }
                         3 -> {
                             onLoginCompanySucces()
