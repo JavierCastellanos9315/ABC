@@ -59,11 +59,13 @@ class LoginViewModelTest {
         )) // Simulate a successful login
 
         val onLoginSuccessCallback = mockk<() -> Unit>()
+        val onLoginAdminSucessCallback = mockk<() -> Unit>()
+        val onLoginCompanySucessCallback = mockk<() -> Unit>()
 
         viewModel.onEmailChanged("test@example.com")
         viewModel.onPasswordChanged("password")
 
-        viewModel.onLoginClicked(sharePreference, onLoginSuccessCallback)
+        viewModel.onLoginClicked(sharePreference, onLoginSuccessCallback, onLoginAdminSucessCallback, onLoginCompanySucessCallback)
 
         // Verify that the email and password LiveData have been updated
         coEvery { onLoginSuccessCallback.invoke() }
