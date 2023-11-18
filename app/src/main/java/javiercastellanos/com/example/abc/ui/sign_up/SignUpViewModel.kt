@@ -3,8 +3,9 @@ package javiercastellanos.com.example.abc.ui.sign_up
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import javiercastellanos.com.example.abc.model.LoginDTO
+import com.google.gson.Gson
 import javiercastellanos.com.example.abc.model.RegistroDTO
+import javiercastellanos.com.example.abc.model.ErrorDTO
 import javiercastellanos.com.example.abc.repository.RemoteUsuario
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -48,8 +49,15 @@ class SignUpViewModel : ViewModel() {
                 _fullName.value = ""
                 _email.value = ""
                 _password.value = ""
-                if(response.body().equals("successful!")) {
+                if (response.body().equals("successful!")) {
                     onSignUpSuccess()
+                } else {
+                    if (response.code().equals(400)) {
+                        val error =
+                            Gson().fromJson(response.errorBody()!!.string(), ErrorDTO::class.java)
+
+                        _fullName.value = error.error
+                    }
                 }
 
             } catch (e: Exception) {

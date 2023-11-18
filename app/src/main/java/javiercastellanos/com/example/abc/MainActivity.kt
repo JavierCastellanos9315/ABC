@@ -27,6 +27,8 @@ import javiercastellanos.com.example.abc.ui.main_menu.MainMenuCompanyScreen
 import javiercastellanos.com.example.abc.ui.main_menu.MainScreen
 import javiercastellanos.com.example.abc.ui.new_contract.NewContractScreen
 import javiercastellanos.com.example.abc.ui.perfomance_evaluation.NewPerformanceEvaluationScreen
+import javiercastellanos.com.example.abc.ui.perfomance_evaluation.PerfEvalApplicantDetailScreen
+import javiercastellanos.com.example.abc.ui.perfomance_evaluation.PerfEvalApplicantScreen
 import javiercastellanos.com.example.abc.ui.personal_data.PersonalDataScreen
 import javiercastellanos.com.example.abc.ui.profile.ProfileScreen
 import javiercastellanos.com.example.abc.ui.sign_up.SignUpScreen
@@ -54,11 +56,11 @@ class MainActivity : ComponentActivity() {
                         composable("WelcomeScreen") {
                             WelcomeScreen(navController = navController)
                         }
-                        composable(route = "loginScreen"){
+                        composable(route = "loginScreen") {
                             LoginScreen(navController = navController)
                         }
                         composable("SignUpScreen") {
-                           SignUpScreen(navController = navController)
+                            SignUpScreen(navController = navController)
 
                         }
                     }
@@ -87,7 +89,7 @@ class MainActivity : ComponentActivity() {
                         composable("AddLaboralExperienceScreen") {
                             LaboralExperienceAddScreen(navController = navController)
                         }
-                        composable("TecnicTestScreen") {
+                        composable("TechnicTestScreen") {
                             TechnicTestScreen(navController = navController)
                         }
                         composable("DoingTestScreen/{id}",
@@ -98,7 +100,30 @@ class MainActivity : ComponentActivity() {
                                 }
                             )) {
                             val id = it.arguments?.getInt("id") ?: 0
-                            DoingTechnicTestScreen(id,navController = navController)
+                            DoingTechnicTestScreen(id, navController = navController)
+                        }
+                        composable("PerfEvalApplicantScreen") {
+                            PerfEvalApplicantScreen(navController = navController)
+                        }
+                        composable("PerfEvalApplicantDetailScreen/{description}/{company}/{date}",
+                            arguments = listOf(
+                                navArgument("description") {
+                                    type = NavType.StringType
+                                    defaultValue = ""
+                                },
+                                navArgument("company") {
+                                    type = NavType.StringType
+                                    defaultValue = ""
+                                },
+                                navArgument("date") {
+                                    type = NavType.StringType
+                                    defaultValue = ""
+                                }
+                            )) {
+                            val description = it.arguments?.getString("description") ?: ""
+                            val company = it.arguments?.getString("company") ?: ""
+                            val date = it.arguments?.getString("date") ?: ""
+                            PerfEvalApplicantDetailScreen(description, company, date, navController)
                         }
                     }
                     navigation(

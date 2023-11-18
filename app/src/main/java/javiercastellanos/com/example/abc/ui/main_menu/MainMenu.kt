@@ -110,19 +110,22 @@ private fun MainContent(padding: PaddingValues, navController: NavController) {
                                 .fillMaxSize()
 
                         )
-                        Text(text = stringResource(id = R.string.profile), textAlign = TextAlign.Center,modifier = Modifier.constrainAs(contentDescription) {
-                            top.linkTo(parent.top, margin = 100.dp)
-                            bottom.linkTo(parent.bottom)
-                            start.linkTo(parent.start)
-                            end.linkTo(parent.end)
-                        })
+                        Text(
+                            text = stringResource(id = R.string.profile),
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.constrainAs(contentDescription) {
+                                top.linkTo(parent.top, margin = 100.dp)
+                                bottom.linkTo(parent.bottom)
+                                start.linkTo(parent.start)
+                                end.linkTo(parent.end)
+                            })
                     }
                     ConstraintLayout(
                         modifier = Modifier
                             .padding(start = 10.dp)
                             .fillMaxSize()
                             .weight(1f)
-                            .clickable { navController.navigate("TecnicTestScreen") }
+                            .clickable { navController.navigate("TechnicTestScreen") }
                     ) {
                         val (image, contentDescription) = createRefs()
 
@@ -140,12 +143,15 @@ private fun MainContent(padding: PaddingValues, navController: NavController) {
                                 }
                                 .fillMaxSize()
                         )
-                        Text(text = stringResource(id = R.string.technical_tests), textAlign = TextAlign.Center,modifier = Modifier.constrainAs(contentDescription) {
-                            top.linkTo(parent.top, margin = 100.dp)
-                            bottom.linkTo(parent.bottom)
-                            start.linkTo(parent.start)
-                            end.linkTo(parent.end)
-                        })
+                        Text(
+                            text = stringResource(id = R.string.technical_tests),
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.constrainAs(contentDescription) {
+                                top.linkTo(parent.top, margin = 100.dp)
+                                bottom.linkTo(parent.bottom)
+                                start.linkTo(parent.start)
+                                end.linkTo(parent.end)
+                            })
                     }
                 }
                 Row(
@@ -159,6 +165,7 @@ private fun MainContent(padding: PaddingValues, navController: NavController) {
                             .padding(end = 10.dp)
                             .fillMaxSize()
                             .weight(1f)
+                            .clickable { navController.navigate("PerfEvalApplicantScreen") }
                     ) {
                         val (image, contentDescription) = createRefs()
 
@@ -178,18 +185,21 @@ private fun MainContent(padding: PaddingValues, navController: NavController) {
                         )
                         Text(text = stringResource(id = R.string.performance_evaluation),
                             textAlign = TextAlign.Center,
-                            modifier = Modifier.fillMaxWidth().constrainAs(contentDescription) {
-                            top.linkTo(parent.top, margin = 100.dp)
-                            bottom.linkTo(parent.bottom)
-                            start.linkTo(parent.start)
-                            end.linkTo(parent.end)
-                        })
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .constrainAs(contentDescription) {
+                                    top.linkTo(parent.top, margin = 100.dp)
+                                    bottom.linkTo(parent.bottom)
+                                    start.linkTo(parent.start)
+                                    end.linkTo(parent.end)
+                                })
                     }
                     ConstraintLayout(
                         modifier = Modifier
                             .padding(start = 10.dp)
                             .fillMaxSize()
                             .weight(1f)
+                            .clickable { navController.navigate("InterviewScreen") }
                     ) {
                         val (image, contentDescription) = createRefs()
 
@@ -207,12 +217,15 @@ private fun MainContent(padding: PaddingValues, navController: NavController) {
                                 }
                                 .fillMaxSize()
                         )
-                        Text(text = stringResource(id = R.string.interviews), textAlign = TextAlign.Center,modifier = Modifier.constrainAs(contentDescription) {
-                            top.linkTo(parent.top, margin = 100.dp)
-                            bottom.linkTo(parent.bottom)
-                            start.linkTo(parent.start)
-                            end.linkTo(parent.end)
-                        })
+                        Text(
+                            text = stringResource(id = R.string.interviews),
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.constrainAs(contentDescription) {
+                                top.linkTo(parent.top, margin = 100.dp)
+                                bottom.linkTo(parent.bottom)
+                                start.linkTo(parent.start)
+                                end.linkTo(parent.end)
+                            })
                     }
                 }
             }

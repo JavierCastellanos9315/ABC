@@ -44,6 +44,7 @@ import javiercastellanos.com.example.abc.R
 import javiercastellanos.com.example.abc.ui.utils.ComboOption
 import javiercastellanos.com.example.abc.ui.utils.SharePreference
 import javiercastellanos.com.example.abc.ui.utils.SingleComboBox
+import javiercastellanos.com.example.abc.ui.utils.mToast
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
@@ -107,7 +108,8 @@ private fun MainContent(
     val rolSelected: List<ComboOption>? by newContractViewModel.rolSelected!!.observeAsState(
         initial = listOf()
     )
-    val sharePreference = SharePreference(LocalContext.current)
+    val mContext = LocalContext.current
+    val sharePreference = SharePreference(mContext)
     newContractViewModel.getInfoInicial(sharePreference)
     LazyColumn(
         modifier = Modifier.padding(
@@ -192,7 +194,20 @@ private fun MainContent(
                 }
                 Button(
                     onClick = {
-                        newContractViewModel.onSaveInfoClicked(onSaveSuccess = { navController.popBackStack() })
+                        newContractViewModel.onSaveInfoClicked(
+                            onSaveSuccess = {
+                                navController.popBackStack()
+                                mToast(
+                                    context = mContext,
+                                    message = mContext.getString(R.string.save_contract)
+                                )
+                            },
+                            onSaveFailed = {
+                                mToast(
+                                    context = mContext,
+                                    message = mContext.getString(R.string.error_contract)
+                                )
+                            })
                     },
 
                     modifier = Modifier
@@ -209,3 +224,4 @@ private fun MainContent(
 
     }
 }
+

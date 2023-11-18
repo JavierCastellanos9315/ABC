@@ -48,11 +48,18 @@
 
     <string name="no_experience">No se han registrado experiencia laboral.</string>
     <string name="no_academic_data">No se han registrado datos academicos.</string>
-    <string name="no_scheduled_interviews">No se han registrado entrevistas programadas</string>
+    <string name="no_tecnical_test">No se han registrado pruebas tecnicas.</string>
+    <string name="no_scheduled_interviews">No se han registrado entrevistas programadas.</string>
 
     <string name="tecnic_test">Pruebas técnicas</string>
     <string name="check_results">Ver resultados</string>
 
     <string name="next">Siguiente</string>
     <string name="send">Envíar</string>
+
+    <string name="error_contract">Este contrato ya existe para esta compañia y empleado.</string>
+    <string name="save_contract">Contrato guardado existosamente.</string>
+    <string name="save_evaluation">Se evaluó el candidato correctamente.</string>
+    <string name="active">Abierta</string>
+    <string name="inactive">Finalizada</string>
 </resources>

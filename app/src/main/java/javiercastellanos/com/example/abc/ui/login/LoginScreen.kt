@@ -31,6 +31,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import javiercastellanos.com.example.abc.ui.utils.SharePreference
 import javiercastellanos.com.example.abc.ui.utils.TextFieldABC
+import javiercastellanos.com.example.abc.ui.utils.mToast
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -39,7 +40,8 @@ fun LoginScreen(navController: NavController) {
     val email: String by viewModel.email.observeAsState(initial = "")
     val password: String by viewModel.password.observeAsState(initial = "")
     val keyboardController = LocalSoftwareKeyboardController.current
-    val sharePreference = SharePreference(LocalContext.current)
+    val mContext = LocalContext.current
+    val sharePreference = SharePreference(mContext)
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(id = R.drawable.background_login),
@@ -115,6 +117,8 @@ fun LoginScreen(navController: NavController) {
                                         inclusive = true
                                     }
                                 }
+                            }, onLoginError = {
+                                mToast(mContext, "User or password incorrect")
                             })
                     },
 

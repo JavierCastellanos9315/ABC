@@ -154,7 +154,7 @@ private fun MainContent(
         } else {
             item {
                 Text(
-                    text = stringResource(id = R.string.no_academic_data),
+                    text = stringResource(id = R.string.no_tecnical_test),
                     style = MaterialTheme.typography.titleLarge,
                     color = Color.Black
                 )
@@ -174,17 +174,19 @@ private fun itemTest(
     idTest: Int,
     navController: NavController
 ) {
-    Box(modifier = Modifier
-        .fillMaxWidth()
-        ) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
         Column {
 
-            Row(modifier = Modifier.clickable { if(state.equals("Pendiente"))
-            {
-                navController.navigate("DoingTestScreen/$idTest")
-            } }) {
+            Row(modifier = Modifier.clickable {
+                if (state.equals("Pendiente")) {
+                    navController.navigate("DoingTestScreen/$idTest")
+                }
+            }) {
                 Image(
-                    painter = painterResource(id = R.drawable.img_academic),
+                    painter = painterResource(id = R.drawable.technical_test_img),
                     contentDescription = "image_academic",
                     contentScale = ContentScale.FillBounds,
                     modifier = Modifier

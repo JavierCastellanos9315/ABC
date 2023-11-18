@@ -1,14 +1,13 @@
 package javiercastellanos.com.example.abc.ui.perfomance_evaluation
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -30,21 +29,18 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import javiercastellanos.com.example.abc.R
-import javiercastellanos.com.example.abc.model.ExperienciaOut
+import javiercastellanos.com.example.abc.model.ContractsOutDTOItem
 import javiercastellanos.com.example.abc.ui.utils.SharePreference
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
@@ -82,7 +78,7 @@ fun PerfEvalApplicantScreen(
             )
         }
     ) { innerPadding ->
-        MainContent(innerPadding, viewModel, keyboardController)
+        MainContent(innerPadding, viewModel, keyboardController, navController)
     }
 }
 
@@ -90,9 +86,9 @@ fun PerfEvalApplicantScreen(
 @Composable
 private fun MainContent(
     padding: PaddingValues, performanceEvaluationViewModel: PerformanEvaluationViewModel,
-    keyboardController: SoftwareKeyboardController?
+    keyboardController: SoftwareKeyboardController?, navController: NavController
 ) {
-    val listPerformanceEvaluations: List<ExperienciaOut>? by performanceEvaluationViewModel.listPerformanceEvaluations!!.observeAsState(
+    val listPerformanceEvaluations: List<ContractsOutDTOItem>? by performanceEvaluationViewModel.listPerformanceEvaluations!!.observeAsState(
         initial = listOf()
     )
     val sharePreference = SharePreference(LocalContext.current)
@@ -135,9 +131,14 @@ private fun MainContent(
             listPerformanceEvaluations!!.forEach {
                 item {
                     itemPerfomanceEvalData(
-                        companyName = it.Rol.rol,
-                        stateEval = it.nombre_empresa,
-                        endDate = it.fecha_fin
+                        it.empresa!!.nombre_completo,
+                        if (it.activo) stringResource(id = R.string.active) else stringResource(
+                            id = R.string.inactive
+                        ),
+                        it.fecha_fin.toString(),
+                        Modifier
+                            .fillMaxWidth()
+                            .clickable { navController.navigate("PerfEvalApplicantDetailScreen/${it.evaluacion_desempeño?.descripcion}/${it.empresa?.nombre_completo}/${it.fecha_fin.toString()}") }
                     )
                 }
             }
@@ -150,44 +151,24 @@ private fun MainContent(
                 )
             }
         }
-
-
     }
 }
 
 @Composable
-fun itemPerfomanceEvalData(companyName: String?, stateEval: String?, endDate: String?) {
-    Box(modifier = Modifier.fillMaxWidth()) {
+fun itemPerfomanceEvalData(companyName: String, state: String, date: String, modifier: Modifier) {
+    Box(modifier = modifier) {
         Column {
-            ConstraintLayout(
-                modifier = Modifier
-                    .height(100.dp)
-                    .weight(3f)
-            ) {
-                val (name, state, date) = createRefs()
-                Text(text = companyName!!, modifier = Modifier
-                    .constrainAs(name) {
-                        top.linkTo(parent.top, margin = 2.dp)
-                        start.linkTo(parent.start, margin = 20.dp)
-                    }
-                    .fillMaxWidth(1f), fontWeight = FontWeight.Bold)
-                Row(modifier = Modifier
-                    .constrainAs(state) {
-                        top.linkTo(parent.top)
-                        bottom.linkTo(parent.bottom)
-                        start.linkTo(parent.start, margin = 20.dp)
-                    }
-                    .fillMaxWidth(1f)) {
-                    Text(text = stateEval!!, modifier = Modifier.fillMaxWidth())
-                }
-                Row(modifier = Modifier
-                    .constrainAs(date) {
-                        bottom.linkTo(parent.bottom, margin = 2.dp)
-                        start.linkTo(parent.start, margin = 20.dp)
-                    }
-                    .fillMaxWidth(1f)) {
-                    Text(text = endDate!!, modifier = Modifier.fillMaxWidth())
-                }
+            Row {
+                Text(text = "Company: ", modifier = Modifier, fontWeight = FontWeight.Bold)
+                Text(text = companyName, modifier = Modifier)
+            }
+            Row {
+                Text(text = "State: ", modifier = Modifier, fontWeight = FontWeight.Bold)
+                Text(text = state, modifier = Modifier)
+            }
+            Row {
+                Text(text = "Date: ", modifier = Modifier, fontWeight = FontWeight.Bold)
+                Text(text = date, modifier = Modifier)
             }
             Spacer(
                 modifier = Modifier

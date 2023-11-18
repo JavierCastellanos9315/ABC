@@ -42,11 +42,11 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import javiercastellanos.com.example.abc.R
-import javiercastellanos.com.example.abc.ui.new_contract.NewContractViewModel
 import javiercastellanos.com.example.abc.ui.utils.ComboOption
 import javiercastellanos.com.example.abc.ui.utils.SharePreference
 import javiercastellanos.com.example.abc.ui.utils.SingleComboBox
 import javiercastellanos.com.example.abc.ui.utils.TextFieldABC
+import javiercastellanos.com.example.abc.ui.utils.mToast
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
@@ -94,13 +94,15 @@ private fun MainContent(
     keyboardController: SoftwareKeyboardController?,
     navController: NavController
 ) {
-    val applicant: List<ComboOption> by performanEvaluationViewModel.applicant.observeAsState(initial = listOf())
+    val applicant: List<ComboOption> by performanEvaluationViewModel.applicant.observeAsState(
+        initial = listOf()
+    )
     val applicantSelected: List<ComboOption>? by performanEvaluationViewModel.applicantSelected.observeAsState(
         initial = listOf()
     )
     val description: String by performanEvaluationViewModel.description.observeAsState(initial = "")
-
-    val sharePreference = SharePreference(LocalContext.current)
+    val mContext = LocalContext.current
+    val sharePreference = SharePreference(mContext)
     performanEvaluationViewModel.getInfoInicial(sharePreference)
     LazyColumn(
         modifier = Modifier.padding(
@@ -149,7 +151,9 @@ private fun MainContent(
                 textField = description,
                 label = " ",
                 keyboardController = keyboardController,
-                modifier = Modifier.fillMaxWidth().height(200.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp),
                 onTextFieldChanged = { performanEvaluationViewModel.onDescriptionChanged(it) })
         }
 
@@ -169,7 +173,13 @@ private fun MainContent(
                 }
                 Button(
                     onClick = {
-                        performanEvaluationViewModel.onSaveInfoClicked(onSaveSuccess = { navController.popBackStack() })
+                        performanEvaluationViewModel.onSaveInfoClicked(onSaveSuccess = {
+                            navController.popBackStack()
+                            mToast(
+                                context = mContext,
+                                message = mContext.getString(R.string.save_evaluation)
+                            )
+                        })
                     },
 
                     modifier = Modifier
