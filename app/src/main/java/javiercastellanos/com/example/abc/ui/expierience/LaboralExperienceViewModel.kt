@@ -65,7 +65,7 @@ open class LaboralExperienceViewModel @Inject constructor(private val remoteUsua
         _workHere.value = checked
     }
 
-    fun onSaveClicked(onSaveSuccess: () -> Unit) {
+    fun onSaveClicked(onSaveSuccess: () -> Unit, onSaveFailed: () -> Unit) {
         val experienciaLaboralDTO = ExperienciaLaboralDTO(
             experiencia = ExperienciaLabIn(
                 `actual` = if (_workHere.value!!) 1 else 0,
@@ -77,15 +77,17 @@ open class LaboralExperienceViewModel @Inject constructor(private val remoteUsua
             ),
             id_candidato = idCandidato!!
         )
-        save(onSaveSuccess,experienciaLaboralDTO)
+        save(onSaveSuccess,experienciaLaboralDTO,onSaveFailed)
     }
 
-    fun save(onSaveSuccess: () -> Unit,experienciaLaboralDTO: ExperienciaLaboralDTO) {
+    fun save(onSaveSuccess: () -> Unit,experienciaLaboralDTO: ExperienciaLaboralDTO,onSaveFailed: () -> Unit) {
         uiScope.launch {
             try {
                 val response = remoteUsuario.saveExperienciaLaboral(experienciaLaboralDTO)
-                if (response.code().equals(200)) {
+                if (response.code() == (200)) {
                     onSaveSuccess()
+                } else {
+                    onSaveFailed()
                 }
             } catch (e: Exception) {
 

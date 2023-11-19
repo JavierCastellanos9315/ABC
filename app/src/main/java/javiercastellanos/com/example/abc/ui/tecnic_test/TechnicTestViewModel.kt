@@ -24,7 +24,8 @@ import javax.inject.Inject
 @HiltViewModel
 class TechnicTestViewModel @Inject constructor(
     private val remoteUsuario: RemoteUsuario,
-    @ApplicationContext private val applicationContext: Context) : ViewModel() {
+    @ApplicationContext private val applicationContext: Context
+) : ViewModel() {
     private val _listTests = MutableLiveData<List<TestResponseDTOItem>>()
     val listTests: LiveData<List<TestResponseDTOItem>>? = _listTests
 
@@ -50,7 +51,7 @@ class TechnicTestViewModel @Inject constructor(
         uiScope.launch {
             try {
                 val response = remoteUsuario.getTests(idCandidato!!)
-                if (response.code().equals(200)) {
+                if (response.code() == (200)) {
                     _listTests.value = response.body()!!
                 }
             } catch (e: Exception) {
@@ -63,7 +64,7 @@ class TechnicTestViewModel @Inject constructor(
         uiScope.launch {
             try {
                 val response = remoteUsuario.getCandidato(sharePreference.getUserLogged()!!.usuario)
-                if (response.code().equals(200)) {
+                if (response.code() == (200)) {
                     idCandidato = response.body()!!.id
                     getTests()
                 }
@@ -73,14 +74,14 @@ class TechnicTestViewModel @Inject constructor(
         }
     }
 
-    fun startTest(idTestStart: Int, onSaveSuccess: () -> Unit) {
+    fun startTest(idTestStart: Int, onSaveSuccess: () -> Unit, onSaveFailed: () -> Unit) {
         idTest = idTestStart
         _buttonLabel.value = applicationContext.getString(R.string.next)
         uiScope.launch {
             try {
                 val response = remoteUsuario.startTest(idTest!!)
-                if (response.code().equals(201)) {
-                    getQuestion(onSaveSuccess = onSaveSuccess)
+                if (response.code() == (201)) {
+                    getQuestion(onSaveSuccess = onSaveSuccess, onSaveFailed = onSaveFailed)
                 }
             } catch (e: Exception) {
 
@@ -88,23 +89,27 @@ class TechnicTestViewModel @Inject constructor(
         }
     }
 
-    private fun getQuestion( onSaveSuccess: () -> Unit) {
+    private fun getQuestion(onSaveSuccess: () -> Unit, onSaveFailed: () -> Unit) {
         uiScope.launch {
             try {
                 val response = remoteUsuario.getQuestion(idTest!!)
-                if (response.code().equals(200)) {
+                if (response.code() == (200)) {
                     _question.value = response.body()!!
+                }else {
+                    if (response.code() == (409)) {
+                        finishTest(onSaveSuccess = onSaveSuccess, onSaveFailed = onSaveFailed)
+                    } else {
+                        onSaveFailed()
+                    }
                 }
-                if (response.code().equals(409)) {
-                    finishTest(onSaveSuccess = onSaveSuccess)
-                }
+
             } catch (e: Exception) {
 
             }
         }
     }
 
-    fun onSaveAnswerClicked(onSaveSuccess: () -> Unit) {
+    fun onSaveAnswerClicked(onSaveSuccess: () -> Unit, onSaveFailed: () -> Unit) {
         val answer = AnswerDTO(
             idEvaluacion = idTest!!,
             idPregunta = _question.value!!.id_pregunta,
@@ -113,17 +118,19 @@ class TechnicTestViewModel @Inject constructor(
         uiScope.launch {
             try {
                 val response = remoteUsuario.answerQuestion(answer)
-                if (response.code().equals(200)) {
+                if (response.code() == (200)) {
                     if (numQuestion == 5) {
                         numQuestion = 0
-                        finishTest(onSaveSuccess = onSaveSuccess)
+                        finishTest(onSaveSuccess = onSaveSuccess, onSaveFailed = onSaveFailed)
                     } else {
-                        if (numQuestion == 4){
+                        if (numQuestion == 4) {
                             _buttonLabel.value = applicationContext.getString(R.string.send)
                         }
                         numQuestion++
-                        getQuestion(onSaveSuccess = onSaveSuccess)
+                        getQuestion(onSaveSuccess = onSaveSuccess, onSaveFailed = onSaveFailed)
                     }
+                } else {
+                    onSaveFailed()
                 }
             } catch (e: Exception) {
 
@@ -131,12 +138,14 @@ class TechnicTestViewModel @Inject constructor(
         }
     }
 
-    private fun finishTest(onSaveSuccess: () -> Unit) {
+    private fun finishTest(onSaveSuccess: () -> Unit, onSaveFailed: () -> Unit) {
         uiScope.launch {
             try {
                 val response = remoteUsuario.finishTest(idTest!!)
-                if (response.code().equals(200)) {
+                if (response.code() == (200)) {
                     onSaveSuccess()
+                } else {
+                    onSaveFailed()
                 }
             } catch (e: Exception) {
             }

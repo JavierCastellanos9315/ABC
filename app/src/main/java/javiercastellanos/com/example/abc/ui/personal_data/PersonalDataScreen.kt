@@ -46,6 +46,7 @@ import javiercastellanos.com.example.abc.ui.utils.MultiComboBox
 import javiercastellanos.com.example.abc.ui.utils.SharePreference
 import javiercastellanos.com.example.abc.ui.utils.SingleComboBox
 import javiercastellanos.com.example.abc.ui.utils.TextFieldABC
+import javiercastellanos.com.example.abc.ui.utils.mToast
 import org.junit.experimental.categories.Categories.ExcludeCategory
 
 
@@ -114,7 +115,8 @@ fun MainContent(
     val skillsSelected: List<ComboOption>? by personalDataViewModel.skillsSelected!!.observeAsState(
         initial = listOf()
     )
-    val sharePreference = SharePreference(LocalContext.current)
+    val mContext = LocalContext.current
+    val sharePreference = SharePreference(mContext)
     personalDataViewModel.getInfoInicial(sharePreference)
     LazyColumn(
         modifier = Modifier.padding(
@@ -234,6 +236,11 @@ fun MainContent(
 
                             }
                         }
+                    },onSaveFailed = {
+                        mToast(
+                            context = mContext,
+                            message = mContext.getString(R.string.error_generic)
+                        )
                     }) },
 
                     modifier = Modifier

@@ -57,7 +57,7 @@ class AcademicDataViewModel @Inject constructor() : ViewModel() {
         _finalYear.value = finalYear
     }
 
-    fun onSaveClicked( onSucess: () -> Unit) {
+    fun onSaveClicked( onSucess: () -> Unit, onSaveFailed: () -> Unit) {
         val academicaDTO = AcademicaDTO(
             id_candidato = idCandidato!!,
             informacionAcademica = InformacionAcademicaIn(
@@ -71,8 +71,10 @@ class AcademicDataViewModel @Inject constructor() : ViewModel() {
         uiScope.launch {
             try {
                 val response = remoteUsuario.saveInformacionAcademica(academicaDTO)
-                if (response.code().equals(200)) {
+                if (response.code() == (200)) {
                     onSucess()
+                } else {
+                    onSaveFailed()
                 }
             } catch (e: Exception) {
 

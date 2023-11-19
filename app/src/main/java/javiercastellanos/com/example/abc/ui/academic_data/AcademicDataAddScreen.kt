@@ -50,9 +50,14 @@ import javiercastellanos.com.example.abc.R
 import javiercastellanos.com.example.abc.ui.expierience.LaboralExperienceViewModel
 import javiercastellanos.com.example.abc.ui.utils.SharePreference
 import javiercastellanos.com.example.abc.ui.utils.TextFieldABC
+import javiercastellanos.com.example.abc.ui.utils.mToast
+
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
-fun AcademicDataAddScreen(navController: NavController, viewModel: AcademicDataViewModel = hiltViewModel()) {
+fun AcademicDataAddScreen(
+    navController: NavController,
+    viewModel: AcademicDataViewModel = hiltViewModel()
+) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     val keyboardController = LocalSoftwareKeyboardController.current
     Scaffold(
@@ -94,12 +99,15 @@ fun MainContentAdd(
     navController: NavController
 ) {
 
-    val instituteEducation: String by academicDataViewModel.instituteEducation.observeAsState(initial = "")
+    val instituteEducation: String by academicDataViewModel.instituteEducation.observeAsState(
+        initial = ""
+    )
     val carrer: String by academicDataViewModel.carrer.observeAsState(initial = "")
     val startYear: String by academicDataViewModel.startYear.observeAsState(initial = "")
     val finalYear: String by academicDataViewModel.finalYear.observeAsState(initial = "")
-    val inProgress : Boolean by academicDataViewModel.inProgress.observeAsState(initial = false)
-    val sharePreference = SharePreference(LocalContext.current)
+    val inProgress: Boolean by academicDataViewModel.inProgress.observeAsState(initial = false)
+    val mContext = LocalContext.current
+    val sharePreference = SharePreference(mContext)
     academicDataViewModel.getInfoUser(sharePreference)
     LazyColumn(
         modifier = Modifier.padding(
@@ -118,16 +126,22 @@ fun MainContentAdd(
             )
         }
         item {
-            Spacer(modifier = Modifier
-                .padding(bottom = 10.dp)
-                .width(200.dp))
-            Spacer(modifier = Modifier
-                .background(Color.Black)
-                .padding(bottom = 1.dp)
-                .fillMaxWidth())
-            Spacer(modifier = Modifier
-                .padding(bottom = 20.dp)
-                .width(200.dp))
+            Spacer(
+                modifier = Modifier
+                    .padding(bottom = 10.dp)
+                    .width(200.dp)
+            )
+            Spacer(
+                modifier = Modifier
+                    .background(Color.Black)
+                    .padding(bottom = 1.dp)
+                    .fillMaxWidth()
+            )
+            Spacer(
+                modifier = Modifier
+                    .padding(bottom = 20.dp)
+                    .width(200.dp)
+            )
         }
         item {
             TextFieldABC(
@@ -164,10 +178,12 @@ fun MainContentAdd(
         }
 
         item {
-            Row(verticalAlignment = Alignment.CenterVertically,
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .background(Color.White)
-                    .fillMaxSize()) {
+                    .fillMaxSize()
+            ) {
                 Checkbox(
                     checked = inProgress,
                     onCheckedChange = { newCheckedState ->
@@ -181,7 +197,7 @@ fun MainContentAdd(
             }
         }
         item {
-            Row (modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
                 Button(
                     onClick = { navController.popBackStack() },
                     modifier = Modifier
@@ -195,13 +211,20 @@ fun MainContentAdd(
                     Text(text = stringResource(id = R.string.cancel), color = Color.Black)
                 }
                 Button(
-                    onClick = { academicDataViewModel.onSaveClicked {
-                        navController.navigate("AcademicDataScreen") {
-                            popUpTo("AcademicDataScreen") {
-                                inclusive = true
+                    onClick = {
+                        academicDataViewModel.onSaveClicked(onSucess = {
+                            navController.navigate("AcademicDataScreen") {
+                                popUpTo("AcademicDataScreen") {
+                                    inclusive = true
+                                }
                             }
-                        }
-                    } },
+                        }, onSaveFailed = {
+                            mToast(
+                                context = mContext,
+                                message = mContext.getString(R.string.error_generic)
+                            )
+                        })
+                    },
 
                     modifier = Modifier
                         .padding(start = 20.dp, top = 70.dp),

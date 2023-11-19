@@ -62,4 +62,8 @@
     <string name="save_evaluation">Se evaluó el candidato correctamente.</string>
     <string name="active">Abierta</string>
     <string name="inactive">Finalizada</string>
+    <string name="comment">Comentarios</string>
+
+    <string name="error_generic">Error creando el registro.</string>
+    <string name="test_completed">Ha terminado la prueba satisfactoriamente.</string>
 </resources>

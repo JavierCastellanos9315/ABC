@@ -63,4 +63,7 @@
     <string name="active">Open</string>
     <string name="inactive">Completed</string>
     <string name="comment">Comments</string>
+
+    <string name="error_generic">Error creating the record.</string>
+    <string name="test_completed">Has completed the test successfully.</string>
 </resources>

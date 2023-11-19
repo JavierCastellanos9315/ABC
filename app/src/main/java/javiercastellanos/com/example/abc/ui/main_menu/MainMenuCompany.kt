@@ -119,10 +119,34 @@ private fun MainContent(padding: PaddingValues, navController: NavController) {
                     }
                     ConstraintLayout(
                         modifier = Modifier
-                            .padding(end = 10.dp)
+                            .padding(start = 10.dp)
                             .fillMaxSize()
                             .weight(1f)
-                    ) {}
+                            .clickable { navController.navigate("InterviewScreenCompany") }
+                    ) {
+                        val (image, contentDescription) = createRefs()
+
+                        Image(
+                            painter = painterResource(id = R.drawable.background_interview),
+                            contentDescription = "Logo",
+
+                            contentScale = ContentScale.FillBounds,
+                            modifier = Modifier
+                                .constrainAs(image) {
+                                    top.linkTo(parent.top)
+                                    bottom.linkTo(parent.bottom)
+                                    start.linkTo(parent.start)
+                                    end.linkTo(parent.end)
+                                }
+                                .fillMaxSize()
+                        )
+                        Text(text = stringResource(id = R.string.interviews),textAlign = TextAlign.Center, modifier = Modifier.constrainAs(contentDescription) {
+                            top.linkTo(parent.top, margin = 100.dp)
+                            bottom.linkTo(parent.bottom)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                        })
+                    }
                 }
             }
         }

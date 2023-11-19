@@ -51,6 +51,7 @@ import javiercastellanos.com.example.abc.ui.utils.ComboOption
 import javiercastellanos.com.example.abc.ui.utils.SharePreference
 import javiercastellanos.com.example.abc.ui.utils.SingleComboBox
 import javiercastellanos.com.example.abc.ui.utils.TextFieldABC
+import javiercastellanos.com.example.abc.ui.utils.mToast
 import org.junit.experimental.categories.Categories.ExcludeCategory
 
 @ExcludeCategory
@@ -105,7 +106,8 @@ fun MainContentAdd(
     val rolSelected: List<ComboOption> by laboralExperienceViewModel.rolSelected.observeAsState(
         initial = listOf()
     )
-    val sharePreference = SharePreference(LocalContext.current)
+    val mContext = LocalContext.current
+    val sharePreference = SharePreference(mContext)
     laboralExperienceViewModel.getMetaData(sharePreference = sharePreference)
     LazyColumn(
         modifier = Modifier.padding(
@@ -218,6 +220,11 @@ fun MainContentAdd(
                                     inclusive = true
                                 }
                             }
+                        },onSaveFailed = {
+                            mToast(
+                                context = mContext,
+                                message = mContext.getString(R.string.error_generic)
+                            )
                         }
                     ) },
 

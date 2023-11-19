@@ -26,12 +26,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import javiercastellanos.com.example.abc.R
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import javiercastellanos.com.example.abc.ui.login.LoginScreen
 import javiercastellanos.com.example.abc.ui.login.LoginViewModel
 import javiercastellanos.com.example.abc.ui.utils.TextFieldABC
+import javiercastellanos.com.example.abc.ui.utils.mToast
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -41,6 +43,7 @@ fun SignUpScreen(navController: NavController) {
     val email: String by viewModel.email.observeAsState(initial = "")
     val password: String by viewModel.password.observeAsState(initial = "")
     val keyboardController = LocalSoftwareKeyboardController.current
+    val mContext = LocalContext.current
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(id = R.drawable.background_login),
@@ -110,9 +113,9 @@ fun SignUpScreen(navController: NavController) {
                                     inclusive = true
                                 }
                             }
-                        }
-
-                        )
+                        }, onSignUpFailed = {
+                            mToast(mContext, mContext.getString(R.string.error_generic))
+                        })
                     },
 
                     modifier = Modifier

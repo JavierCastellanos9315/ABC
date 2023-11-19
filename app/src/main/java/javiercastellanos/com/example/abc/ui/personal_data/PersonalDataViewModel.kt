@@ -45,7 +45,7 @@ class PersonalDataViewModel: ViewModel() {
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
     var remoteUsuario: RemoteUsuario = RemoteUsuario()
 
-    fun onSaveInfoClicked(onSaveSuccess: () -> Unit) {
+    fun onSaveInfoClicked(onSaveSuccess: () -> Unit, onSaveFailed: () -> Unit) {
         val candidatoInfoDTO = CandidatoInfoDTO(
             edad = _edad.value!!.toInt(),
             email = _email.value!!,
@@ -63,6 +63,8 @@ class PersonalDataViewModel: ViewModel() {
                 val response = remoteUsuario.saveCandidato(candidatoInfoDTO)
                 if(response.code().equals(200)) {
                     onSaveSuccess()
+                } else {
+                    onSaveFailed()
                 }
             } catch (e: Exception) {
 

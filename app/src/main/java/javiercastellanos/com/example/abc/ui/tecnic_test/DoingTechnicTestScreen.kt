@@ -47,6 +47,7 @@ import androidx.navigation.NavController
 import javiercastellanos.com.example.abc.R
 import javiercastellanos.com.example.abc.model.PosiblesRespuesta
 import javiercastellanos.com.example.abc.ui.utils.SharePreference
+import javiercastellanos.com.example.abc.ui.utils.mToast
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
@@ -57,8 +58,13 @@ fun DoingTechnicTestScreen(idTest: Int,
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     val keyboardController = LocalSoftwareKeyboardController.current
+    val mContext = LocalContext.current
     LaunchedEffect(idTest) {
-        viewModel.startTest(idTest, onSaveSuccess = { navController.popBackStack() })
+        viewModel.startTest(idTest, onSaveSuccess = { navController.popBackStack() }, onSaveFailed = {
+            mToast(
+                context = mContext,
+                message = mContext.getString(R.string.error_generic)
+            )} )
     }
     //viewModel.startTest(idTest, onSaveSuccess = { navController.popBackStack()})
     Scaffold(
@@ -101,7 +107,8 @@ private fun MainContent(
     keyboardController: SoftwareKeyboardController?,
     navController: NavController,
 ) {
-    val sharePreference = SharePreference(LocalContext.current)
+    val mContext = LocalContext.current
+    val sharePreference = SharePreference(mContext)
     val questionOutDTO by technicTestViewModel.question!!.observeAsState( initial = null)
     val buttonLabel by technicTestViewModel.buttonLabel.observeAsState(initial = "")
 
@@ -149,8 +156,17 @@ private fun MainContent(
         item{
             Button(
                 onClick = { technicTestViewModel.onSaveAnswerClicked(onSaveSuccess = {
+                    mToast(
+                        context = mContext,
+                        message = mContext.getString(R.string.test_completed)
+                    )
                     navController.popBackStack()
-                    }
+                    },onSaveFailed = {
+                    mToast(
+                        context = mContext,
+                        message = mContext.getString(R.string.error_generic)
+                    )
+                }
                 ) },
 
                 modifier = Modifier

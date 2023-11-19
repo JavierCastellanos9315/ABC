@@ -125,6 +125,9 @@ class MainActivity : ComponentActivity() {
                             val date = it.arguments?.getString("date") ?: ""
                             PerfEvalApplicantDetailScreen(description, company, date, navController)
                         }
+                        composable("InterviewScreenCandidate") {
+                            InterviewScreen(navController = navController)
+                        }
                     }
                     navigation(
                         startDestination = "MainCompanyScreen",
@@ -135,6 +138,9 @@ class MainActivity : ComponentActivity() {
                         }
                         composable("NewPerformanceEvaluationScreen") {
                             NewPerformanceEvaluationScreen(navController = navController)
+                        }
+                        composable("InterviewScreenCompany") {
+                            InterviewScreen(navController = navController)
                         }
                     }
                     navigation(

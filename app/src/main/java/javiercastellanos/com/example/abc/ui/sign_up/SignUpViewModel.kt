@@ -35,7 +35,7 @@ class SignUpViewModel : ViewModel() {
         _password.value = password
     }
 
-    fun onSignUpClicked(onSignUpSuccess: () -> Unit) {
+    fun onSignUpClicked(onSignUpSuccess: () -> Unit, onSignUpFailed : () -> Unit) {
         val registroDTO = RegistroDTO(
             contrasena = _password.value!!,
             email = _email.value!!,
@@ -52,12 +52,7 @@ class SignUpViewModel : ViewModel() {
                 if (response.body().equals("successful!")) {
                     onSignUpSuccess()
                 } else {
-                    if (response.code().equals(400)) {
-                        val error =
-                            Gson().fromJson(response.errorBody()!!.string(), ErrorDTO::class.java)
-
-                        _fullName.value = error.error
-                    }
+                    onSignUpFailed()
                 }
 
             } catch (e: Exception) {

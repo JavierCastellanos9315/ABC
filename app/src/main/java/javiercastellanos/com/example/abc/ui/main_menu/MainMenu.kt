@@ -199,7 +199,7 @@ private fun MainContent(padding: PaddingValues, navController: NavController) {
                             .padding(start = 10.dp)
                             .fillMaxSize()
                             .weight(1f)
-                            .clickable { navController.navigate("InterviewScreen") }
+                            .clickable { navController.navigate("InterviewScreenCandidate") }
                     ) {
                         val (image, contentDescription) = createRefs()
 

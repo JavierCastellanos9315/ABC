@@ -30,7 +30,7 @@ class InterviewViewModel @Inject constructor(private val remoteUsuario: RemoteUs
     fun getInitialData(sharePreference: SharePreference) {
         val userLoggued = sharePreference.getUserLogged()
         userLoggued?.let {
-            _isDetail.value = it.id_tipo_usuario == 1
+            _isDetail.value = (it.id_tipo_usuario == 1 || it.id_tipo_usuario == 3)
         }
         uiScope.launch {
             try {
