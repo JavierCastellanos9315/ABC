@@ -113,6 +113,7 @@ fun SignUpScreen(navController: NavController) {
                                     inclusive = true
                                 }
                             }
+                            mToast(mContext, mContext.getString(R.string.succes_record))
                         }, onSignUpFailed = {
                             mToast(mContext, mContext.getString(R.string.error_generic))
                         })

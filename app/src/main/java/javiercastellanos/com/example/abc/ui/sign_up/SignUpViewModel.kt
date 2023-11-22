@@ -49,7 +49,7 @@ class SignUpViewModel : ViewModel() {
                 _fullName.value = ""
                 _email.value = ""
                 _password.value = ""
-                if (response.body().equals("successful!")) {
+                if (response.code() == 201) {
                     onSignUpSuccess()
                 } else {
                     onSignUpFailed()

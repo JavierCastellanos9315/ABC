@@ -20,13 +20,14 @@ import javiercastellanos.com.example.abc.model.PerformanceEvaluationOutDTO
 import javiercastellanos.com.example.abc.model.ProjectOutDTO
 import javiercastellanos.com.example.abc.model.QuestionOutDTO
 import javiercastellanos.com.example.abc.model.RegistroDTO
+import javiercastellanos.com.example.abc.model.RegistroOutDTO
 import javiercastellanos.com.example.abc.model.StartTestOutDTO
 import javiercastellanos.com.example.abc.model.TestResponseDTO
 import javiercastellanos.com.example.abc.model.UsersOutDto
 import retrofit2.Response
 
 class RemoteUsuario {
-    suspend fun registro(registroDTO: RegistroDTO): Response<String> {
+    suspend fun registro(registroDTO: RegistroDTO): Response<RegistroOutDTO> {
         return RetrofitHelper.service.registro(registroDTO)
     }
     suspend fun login(loginDTO: LoginDTO): Response<LoginResponseDTO> {

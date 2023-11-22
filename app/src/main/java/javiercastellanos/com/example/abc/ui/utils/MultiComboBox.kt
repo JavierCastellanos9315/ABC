@@ -50,7 +50,15 @@ fun MultiComboBox(
     val isEnabled by rememberUpdatedState { options.isNotEmpty() }
     var selectedOptionsList  = remember { mutableStateListOf<Int>() }
     selectedOptionsList.clear()
-    //Initial setup of selected ids
+    var opcionesListado =   remember {
+        mutableStateListOf<ComboOption>()
+    }
+    opcionesListado.clear()
+    if (options.isNotEmpty()){
+        options.forEach {
+            opcionesListado.add(it)
+        }
+    }
     if (selectedIds != null) {
         if (selectedIds.isNotEmpty()){
 
@@ -67,7 +75,7 @@ fun MultiComboBox(
             if (isEnabled()) {
                 expanded = !expanded
                 if (!expanded) {
-                    onOptionsChosen(options.filter { it.id in selectedOptionsList }.toList())
+                    onOptionsChosen(opcionesListado.filter { it.id in selectedOptionsList }.toList())
                 }
             }
         },
@@ -160,6 +168,15 @@ fun SingleComboBox(
     val isEnabled by rememberUpdatedState { options.isNotEmpty() }
     var selectedOptionsList  = remember { mutableStateListOf<Int>() }
     selectedOptionsList.clear()
+    var opcionesListado =   remember {
+        mutableStateListOf<ComboOption>()
+    }
+    opcionesListado.clear()
+    if (options.isNotEmpty()){
+        options.forEach {
+            opcionesListado.add(it)
+        }
+    }
     //Initial setup of selected ids
     if (selectedIds != null) {
         selectedIds.forEach{
@@ -173,7 +190,7 @@ fun SingleComboBox(
             if (isEnabled()) {
                 expanded = !expanded
                 if (!expanded) {
-                    onOptionsChosen(options.filter { it.id in selectedOptionsList }.toList())
+                    onOptionsChosen(opcionesListado.filter { it.id in selectedOptionsList }.toList())
                 }
             }
         },

@@ -19,6 +19,7 @@ import javiercastellanos.com.example.abc.model.PerformanceEvaluationOutDTO
 import javiercastellanos.com.example.abc.model.ProjectOutDTO
 import javiercastellanos.com.example.abc.model.QuestionOutDTO
 import javiercastellanos.com.example.abc.model.RegistroDTO
+import javiercastellanos.com.example.abc.model.RegistroOutDTO
 import javiercastellanos.com.example.abc.model.StartTestOutDTO
 import javiercastellanos.com.example.abc.model.TestResponseDTO
 import javiercastellanos.com.example.abc.model.UsersOutDto
@@ -37,7 +38,7 @@ interface APIService {
     @POST("/registro/usuario")
     suspend fun registro(
         @Body registroDTO: RegistroDTO
-    ): Response<String>
+    ): Response<RegistroOutDTO>
 
 
     @POST("/registro/login")
