@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javiercastellanos.com.example.abc.model.ContratoInDTO
+import javiercastellanos.com.example.abc.model.EmpresasOutDTO
+import javiercastellanos.com.example.abc.model.ProjectOutDTO
 import javiercastellanos.com.example.abc.repository.RemoteUsuario
 import javiercastellanos.com.example.abc.ui.utils.ComboOption
 import javiercastellanos.com.example.abc.ui.utils.SharePreference
@@ -34,6 +36,8 @@ class NewContractViewModel @Inject constructor(private val remoteUsuario: Remote
     val projectSelected: LiveData<List<ComboOption>>? = _projectSelected
     private val _rolSelected = MutableLiveData<List<ComboOption>>()
     val rolSelected: LiveData<List<ComboOption>>? = _rolSelected
+    private val listCompanies : MutableLiveData<EmpresasOutDTO?> = MutableLiveData<EmpresasOutDTO?>()
+    private val listProjects : MutableLiveData<ProjectOutDTO?> = MutableLiveData<ProjectOutDTO?>()
 
     private val viewModelJob = SupervisorJob()
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
@@ -45,12 +49,15 @@ class NewContractViewModel @Inject constructor(private val remoteUsuario: Remote
     fun onCompanyChanged(company: List<ComboOption>) {
         if (company.isNotEmpty()) {
             _companySelected.value = company
-            getProjects(_companySelected.value!![0].id)
+            listCompanies.value?.filter { it.usuario.id == company[0].id }.let {
+                getProjects(it?.get(0)!!.id)
+            }
         }
     }
 
     fun onProjectChanged(project: List<ComboOption>) {
         _projectSelected.value = project
+        getRoles(_projectSelected.value!![0].id)
     }
 
     fun onRolChanged(rol: List<ComboOption>) {
@@ -63,7 +70,7 @@ class NewContractViewModel @Inject constructor(private val remoteUsuario: Remote
                 val response = remoteUsuario.getCandidatos()
                 if (response.code() == 200) {
                     _applicant.value = response.body()?.map {
-                        ComboOption(id = it.id, descripcion = it.usuario.nombre_completo)
+                        ComboOption(id = it.usuario.id, descripcion = it.usuario.nombre_completo)
                     } ?: emptyList()
                     getCompanies()
                 }
@@ -78,28 +85,24 @@ class NewContractViewModel @Inject constructor(private val remoteUsuario: Remote
             try {
                 val response = remoteUsuario.getCompanies()
                 if (response.code() == 200) {
+                    listCompanies.value = response.body()
                     _company.value = response.body()?.map {
-                        ComboOption(id = it.id, descripcion = it.usuario.nombre_completo)
+                        ComboOption(id = it.usuario.id, descripcion = it.usuario.nombre_completo)
                     } ?: emptyList()
                 }
-                getRoles()
             } catch (e: Exception) {
             }
         }
     }
 
-    fun getRoles() {
-        uiScope.launch {
-            try {
-                val response = remoteUsuario.getMetadata()
-                if (response.code() == 200) {
-                    _rol.value = response.body()?.roles?.toComboOptions()
-
-
-                }
-            } catch (e: Exception) {
+    fun getRoles(idProject : Int) {
+        var listRolesProyecto = emptyList<ComboOption>()
+        listProjects.value?.filter { it.id == idProject }?.map {
+            it.rolesProyecto.forEach {
+                listRolesProyecto = listRolesProyecto.plus(ComboOption(id = it.id, descripcion = it.rol))
             }
         }
+        _rol.value = listRolesProyecto
     }
 
     fun getProjects(idCompanie: Int) {
@@ -109,6 +112,7 @@ class NewContractViewModel @Inject constructor(private val remoteUsuario: Remote
             try {
                 val response = remoteUsuario.getProjects(idCompanie)
                 if (response.code() == 200) {
+                    listProjects.value = response.body()
                     _project.value = response.body()?.map {
                         ComboOption(id = it.id, descripcion = it.nombre)
                     }
